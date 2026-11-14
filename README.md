@@ -1,6 +1,6 @@
 # Squash VR Trainer
 
-A solo squash training game for **Meta Quest 2** that runs in the headset's web browser (WebXR). You don't install anything: it's one HTML file, `squash-vr.html`, served by GitHub Pages.
+A solo squash training game for **Meta Quest 2** that runs in the headset's web browser (WebXR). You don't install anything: it's one HTML file, served by GitHub Pages. `index.html` and `squash-vr.html` are the same game; `index.html` just gives it the shorter address.
 
 You get a regulation 9.75 × 6.40 m court, a ball that behaves like a warm double-yellow, a ball machine with drills, and targets for nicks, boasts and deep drives.
 
@@ -13,10 +13,10 @@ You get a regulation 9.75 × 6.40 m court, a ball that behaves like a warm doubl
 3. **Go to this address** (tap the address bar and type it):
 
    ```
-   clavelseb.github.io/squashvr/squash-vr.html
+   clavelseb.github.io/squashvr
    ```
 
-   The page should say **"Headset ready. Put it on and press Enter VR."**
+   (The longer `clavelseb.github.io/squashvr/squash-vr.html` opens the same game.) The page should say **"Headset ready. Put it on and press Enter VR."**
 4. **Press Enter VR.** If the browser asks for permission to use VR, choose **Allow**.
 5. **Play.** Press **B** (or **Y**) for the menu. Choose a drill under **Practice**, or stay in **Free play**: hold the trigger on your ball hand to hold the ball, release to toss, then hit.
 
@@ -24,7 +24,7 @@ Tip: bookmark the page in the Quest Browser so you don't have to type the addres
 
 > **Use the github.io link, not the github.com one.** The link
 > `github.com/clavelseb/squashvr/blob/main/squash-vr.html` only shows the file's source code. The game itself runs from
-> **clavelseb.github.io/squashvr/squash-vr.html**.
+> **clavelseb.github.io/squashvr**.
 
 ---
 
@@ -44,7 +44,7 @@ GitHub Pages serves over HTTPS, which WebXR needs, so nothing else is required.
 ## Put up a new version
 
 1. On github.com, open the repository and choose **Add file → Upload files**.
-2. Drop in the new `squash-vr.html` (keep that exact name) and press **Commit changes**.
+2. Drop in the new `squash-vr.html`, plus a copy of it named `index.html`, and press **Commit changes**. Update both files every time; otherwise the short address keeps showing the old version.
 3. Wait a minute or two for Pages to publish it, then reload the page in the Quest Browser.
 
 **Check you have the new version:** the version number is in the top-right corner of the in-game menu (for example **v1.9**).
@@ -52,7 +52,7 @@ GitHub Pages serves over HTTPS, which WebXR needs, so nothing else is required.
 **Still the old version?** GitHub Pages lets browsers keep a copy for up to 10 minutes. Wait a few minutes and reload, or add anything after a `?` to the address so the browser fetches it fresh:
 
 ```
-clavelseb.github.io/squashvr/squash-vr.html?v=2
+clavelseb.github.io/squashvr/?v=2
 ```
 
 ---
@@ -105,9 +105,9 @@ Settings are saved in the Quest Browser, so they're still there the next time yo
 
 | Problem | Fix |
 |---|---|
-| The page shows code instead of a court | You opened the github.com link. Use **clavelseb.github.io/squashvr/squash-vr.html** |
+| The page shows code instead of a court | You opened the github.com link. Use **clavelseb.github.io/squashvr** |
 | "404 – There isn't a GitHub Pages site here" | GitHub Pages isn't on yet, or is still publishing (see *One-time setup*) |
 | **Enter VR** is greyed out | Open the page in the Quest's own Browser app, from the github.io address |
-| Still the old version after an upload | Wait a few minutes and reload, or add `?v=2` to the address |
+| Still the old version after an upload | Check you replaced both `index.html` and `squash-vr.html`, wait a few minutes and reload, or add `?v=2` to the address |
 | Hitting the ball feels too hard | Menu → Racquet & settings: turn up **Hit assist**, turn on **Perfect hits**, or move the racquet **nearer** |
 | The bounce feels off after tuning | Menu → Ball physics → **Reset all** |
