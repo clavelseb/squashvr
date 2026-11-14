@@ -105,7 +105,7 @@
         <dt>Ball</dt><dd>24 g, 40 mm hollow shell, drag + Magnus lift</dd>
         <dt>Bounce</dt><dd>COR 0.49 at 10 m/s, 45 °C, falling with speed. Always warm by default (40, 45 or 50 °C), or start cold and warm it up</dd>
         <dt>Contact</dt><dd>Soft contact, ~5 ms on the strings, grip and spin on every wall and the floor: a gripping ball leaves rolling, keeping about 65 % of its speed along the surface</dd>
-        <dt>Hit assist</dt><dd>The swing and the ball's path are traced through each frame; a ball that would clip the frame or just miss the head is put on the strings (off, 3, 6 or 10 cm in the menu). Perfect hits moves every hit to the sweet spot</dd>
+        <dt>Hit assist</dt><dd>The swing and the ball's path are traced through each frame; a ball that would clip the frame or just miss the head is put on the strings (off, 3, 6 or 10 cm in the menu). Perfect hits moves every hit to the sweet spot. Both are on by default, at 10 cm</dd>
         <dt>Tuning</dt><dd>The Ball physics tab adjusts 18 values (bounce, grip, spin, air, strings) live, with a drop test, replays of your last hit and test shots in real time or slow motion</dd>
         <dt>Nick</dt><dd>Emerges from the ball flattening into the wall–floor joint; targets are solved and verified with the same physics</dd>
         <dt>Racquet</dt><dd>Built from your CAD model: open throat with bridge, 500 cm² head, 16×20 strings, 8×18 mm frame; 135 g, balance 353 mm, string-bed trampoline, frame mishits</dd>
@@ -2988,7 +2988,7 @@ class LabelPanel {
 
 
 
-const VERSION = '1.9';
+const VERSION = '1.9.1';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -2997,7 +2997,7 @@ const HZ0 = -0.20, HZ_MIN = HZ0 - 0.20, HZ_MAX = HZ0 + 0.20;
 const DEFAULTS = {
   hand: 'right', drill: 'free', side: 'fh', gap: 2.0, autoPlace: true,
   ball: 'dy', temp: 'w45', grip: { a: 0, b: 0, c: 0, hx: 0, hy: 0, hz: HZ0 }, showSpeed: true, showBounce: true, blur: true, showFps: false,
-  fps: 120, quality: 'normal', vol: 0.8, haptics: 1.0, autoReturn: true, moveStick: true, assist: 'medium', assistPerfect: false,
+  fps: 120, quality: 'normal', vol: 0.8, haptics: 1.0, autoReturn: true, moveStick: true, assist: 'large', assistPerfect: true,
   tune: {}, replaySpeed: 0.5,      // ball physics overrides (Ball tab: only values changed from the defaults), replay / test-shot speed
   targets: { volley: 'cross', loose: 'cross', boast: 'cross', drive: 'boast', rail: 'drive' },   // per drill: cross | straight | boast | drive | off
 };
@@ -3009,6 +3009,10 @@ const S = (() => {
   // grips saved before v1.8 measured the hand position from the old (20 cm further) racquet position
   if (saved.grip && typeof saved.grip === 'object' && !(saved.gripRev >= 2)) o.grip.hz = Math.max(HZ_MIN, Math.min(HZ_MAX, (+o.grip.hz || 0) + HZ0));
   o.gripRev = 2;
+  // v1.9.1: hit assist defaults to the largest catch zone (10 cm) with perfect hits; settings saved before that
+  // still hold the old default (6 cm, perfect off), so switch them over once (later changes in the menu are kept)
+  if (!(saved.assistRev >= 1)) { o.assist = 'large'; o.assistPerfect = true; }
+  o.assistRev = 1;
   o.targets = Object.assign({}, DEFAULTS.targets, saved.targets && typeof saved.targets === 'object' ? saved.targets : {});
   o.tune = Object.assign({}, saved.tune && typeof saved.tune === 'object' ? saved.tune : {});
   return o;
