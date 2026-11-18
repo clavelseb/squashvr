@@ -54,7 +54,7 @@ Tip: bookmark the page in the headset's browser so you don't have to type the ad
 - **Practice:** pick a drill (Free play, Lob serve, Hard serve, Volley feed, Loose ball, Boast feed, Boast practice, Drive practice). You also set the feed side (forehand, backhand or alternate), the target, the time between feeds, the ball type and temperature, and where you stand.
   - **Alternate** runs a sequence of blocks. The default is on the volley feed: 10 backhand crosscourt nicks, 10 backhand straight nicks, 10 forehand crosscourt nicks and 10 forehand straight nicks. Each block's drill, side (forehand, backhand or both), target and number of shots can be changed, and you can add up to six blocks.
   - You're placed once at the start of each block. The feeds are identical unless you turn on **Small variation**.
-  - Every shot scores 3 points for a nick, 2 within 5 cm of it and 1 within 15 cm (boasts and drives score the same way from their own ratings), and the total shows at the end. Press A or X to start again.
+  - Every shot scores 3 points for a nick, 2 within 30 cm of it and 1 within 70 cm (measured as the height above the nick where it hits the side wall, or how far from the wall it bounces first; both distances can be changed in the menu). Boasts and drives score the same way from their own ratings, and the total shows at the end. Press A or X to start again.
 - **Racquet & settings:**
   - Racquet hand and grip, and racquet tilt, lean, face angle and distance from your hand.
   - **Hit assist:** a catch zone of 3, 6 or 10 cm around the strings, and **Perfect hits**, which plays every hit from the sweet spot. Both are on by default at the largest setting (10 cm); turn them down or off as your hitting improves.

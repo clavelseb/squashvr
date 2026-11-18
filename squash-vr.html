@@ -97,7 +97,7 @@
       <ul class="drills">
         <li>Free play</li><li>Lob serve</li><li>Hard serve</li><li>Volley feed</li><li>Loose ball</li><li>Boast feed</li><li>Boast practice</li><li>Drive practice</li>
       </ul>
-      <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the deep-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each drill can be set to crosscourt nick, straight nick, boast, deep drive or no target. Feed side <strong>Alternate</strong> runs a sequence of blocks instead, by default on the volley feed: 10 backhand crosscourt nicks, 10 backhand straight nicks, then the same on the forehand. Each block has its own drill, side, target and number of shots (up to six blocks, set in the menu); you are placed once at the start of each block, the feeds are identical unless you turn on small variation, and every shot scores 3 points for a nick, 2 within 5 cm of it and 1 within 15 cm, with the total at the end.</p>
+      <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the deep-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each drill can be set to crosscourt nick, straight nick, boast, deep drive or no target. Feed side <strong>Alternate</strong> runs a sequence of blocks instead, by default on the volley feed: 10 backhand crosscourt nicks, 10 backhand straight nicks, then the same on the forehand. Each block has its own drill, side, target and number of shots (up to six blocks, set in the menu); you are placed once at the start of each block, the feeds are identical unless you turn on small variation, and every shot scores 3 points for a nick, 2 within 30 cm of it and 1 within 70 cm (both distances set in the menu), with the total at the end.</p>
     </section>
     <section aria-labelledby="ph">
       <h2 id="ph">Ball &amp; racquet physics</h2>
@@ -3113,7 +3113,7 @@ class LabelPanel {
 
 
 
-const VERSION = '1.15';
+const VERSION = '1.16';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -3124,7 +3124,7 @@ const HZ0 = -0.20, HZ_MIN = HZ0 - 0.20, HZ_MAX = HZ0 + 0.20;
 // backhand, then the same on the forehand.
 const SEQ_DRILLS = ['volley', 'loose', 'boast', 'drive', 'rail', 'lob', 'hard'];   // any drill but free play
 const SEQ_SIDES = ['fh', 'bh', 'alt'], SEQ_TARGETS = ['cross', 'straight', 'boast', 'drive', 'off'], SEQ_MAX = 6;
-const seqDefault = () => ({ vary: false, blocks: [
+const seqDefault = () => ({ vary: false, near2: 0.30, near1: 0.70, blocks: [
   { drill: 'volley', side: 'bh', target: 'cross', n: 10 }, { drill: 'volley', side: 'bh', target: 'straight', n: 10 },
   { drill: 'volley', side: 'fh', target: 'cross', n: 10 }, { drill: 'volley', side: 'fh', target: 'straight', n: 10 }] });
 function seqValid(q) {
@@ -3132,7 +3132,10 @@ function seqValid(q) {
   const blocks = q.blocks.filter(b => b && typeof b === 'object').slice(0, SEQ_MAX).map(b => ({
     drill: SEQ_DRILLS.includes(b.drill) ? b.drill : 'volley', side: SEQ_SIDES.includes(b.side) ? b.side : 'fh',
     target: SEQ_TARGETS.includes(b.target) ? b.target : 'cross', n: Math.max(1, Math.min(50, Math.round(+b.n) || 10)) }));
-  return blocks.length ? { vary: !!q.vary, blocks } : seqDefault();
+  // points for a near miss: 2 within near2, 1 within near1 of the nick (metres; v1.16, defaults 30 / 70 cm)
+  const cl = (v, d) => Math.max(0.05, Math.min(1.5, Math.round((+v || d) * 20) / 20));
+  const near2 = cl(q.near2, 0.30), near1 = Math.max(cl(q.near1, 0.70), near2 + 0.05);
+  return blocks.length ? { vary: !!q.vary, near2, near1, blocks } : seqDefault();
 }
 const DEFAULTS = {
   hand: 'right', drill: 'free', side: 'fh', gap: 2.0, autoPlace: true,
@@ -3489,8 +3492,8 @@ function driveStatsLine() {
 }
 // ---------------------------------------------------------------- Alternate: the sequence of blocks
 // Points for each shot at a target: 3 = the real thing, 2 = very close, 1 = close enough, 0 = not close.
-//   nick: 3 = a nick on the target wall; 2 = the side wall within 5 cm of the nick height (or the floor first within
-//   10 cm of the wall); 1 = within 15 cm (floor first: 30 cm). Boast: 3 nick or tight, 2 good, 1 any boast that
+//   nick: 3 = a nick on the target wall; 2 = the side wall within near2 (30 cm) of the nick height, or the floor first
+//   within near2 of the wall; 1 = within near1 (70 cm), both set in the menu. Boast: 3 nick or tight, 2 good, 1 any boast that
 //   stays up. Drive: 3 = 85 or more (great) or a nick, 2 = 70 (good), 1 = 50. Tin, out, down or not hit: 0.
 const SIDE_TXT = { fh: 'forehand', bh: 'backhand', alt: 'both sides' }, SIDE_SHORT = { fh: 'FH', bh: 'BH', alt: 'FH+BH' };
 const TARGET_TXT = { cross: 'crosscourt nicks', straight: 'straight nicks', boast: 'boasts', drive: 'deep drives', off: '' };
@@ -3504,8 +3507,9 @@ function nickPoints(sh) {
   if (!sh.front || sh.front.tin || sh.endText === 'TIN' || sh.endText === 'OUT' || sh.endText === 'DOWN') return 0;
   const W2 = COURT.W / 2, nickWall = sh.wall < 0 ? SURF.LEFT : SURF.RIGHT;
   if (sh.nick) return !sh.side || sh.side.surf === nickWall ? 3 : 1;
-  if (sh.side && sh.side.surf === nickWall) { const dh = Math.abs(sh.side.h - NICK_H * 2 * phys.r); return dh <= 0.05 ? 2 : dh <= 0.15 ? 1 : 0; }
-  if (sh.floor && !sh.side) { const rem = sh.wall < 0 ? sh.floor.x - (-W2 + phys.r) : (W2 - phys.r) - sh.floor.x; return rem <= 0.10 ? 2 : rem <= 0.30 ? 1 : 0; }
+  const n2 = (S.seq.near2 || 0.30) + 1e-6, n1 = (S.seq.near1 || 0.70) + 1e-6;
+  if (sh.side && sh.side.surf === nickWall) { const dh = Math.abs(sh.side.h - NICK_H * 2 * phys.r); return dh <= n2 ? 2 : dh <= n1 ? 1 : 0; }
+  if (sh.floor && !sh.side) { const rem = sh.wall < 0 ? sh.floor.x - (-W2 + phys.r) : (W2 - phys.r) - sh.floor.x; return rem <= n2 ? 2 : rem <= n1 ? 1 : 0; }
   return 0;
 }
 // a shot at the target has been scored: its points (the rally may already be counted, see seqRallyEnd)
@@ -3531,6 +3535,7 @@ function seqLine() {
   return `Block ${q.i + 1}/${B.length} · ${blockName(b)} · shot ${Math.min(q.shot + 1, b.n)}/${b.n} · ${bp.p} pts · total ${t.tot} · ${btnName(false, 4)}: feed now`;
 }
 function seqRestart() {
+  S.seq = seqValid(S.seq);
   G.sq = { i: 0, shot: 0, recs: [], done: false, nextAt: 0, shown: false };
   if (seqOn()) { setDrill(S.drill); showMain(`Block 1 of ${S.seq.blocks.length}`, '#9fd3ff'); board.set(undefined, undefined, blockName(seqBlock()), seqLine()); }
 }
@@ -3569,7 +3574,7 @@ function seqSummary() {
   board.set(undefined, undefined, t.max ? `points (${Math.round(100 * t.tot / t.max)} %) · ${t.n3} nick${t.n3 === 1 ? '' : 's'} · ${t.n2} very close · ${t.n1} close` : 'no shots at a target',
     `Sequence done · ${btnName(false, 4)}: start again`, undefined,
     B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('   ·   '),
-    t.max ? '3 = nick (or tight boast, great drive) · 2 = within 5 cm · 1 = within 15 cm' : '');
+    t.max ? `3 = nick (or tight boast, great drive) · 2 = within ${cmTxt(S.seq.near2 || 0.30)} cm · 1 = within ${cmTxt(S.seq.near1 || 0.70)} cm` : '');
 }
 const statsLine = (f) => (seqOn() ? seqLine() : f());
 
@@ -4379,7 +4384,14 @@ function buildMenu() {
         btn('Add block', false, B.length < SEQ_MAX ? () => { S.seq.blocks.push(Object.assign({}, B[B.length - 1])); save(); } : null, { flex: 1.0, small: true }),
         btn('Default', false, () => { S.seq = seqDefault(); save(); seqRestart(); }, { flex: 0.85, small: true }),
         btn(S.seq.vary ? 'Small variation: on' : 'Small variation: off', S.seq.vary, () => { S.seq.vary = !S.seq.vary; save(); setDrill(S.drill); }, { flex: 1.75, small: true }),
-        btn('Restart', false, () => seqRestart(), { flex: 0.9, small: true })]] }];
+        btn('Restart', false, () => seqRestart(), { flex: 0.9, small: true })],
+        // near-miss distances (from the nick: height on the side wall, or a floor bounce's distance from the wall)
+        ...[[['near2', '2 points within'], ['near1', '1 point within']].flatMap(([k, cap]) => {
+          const setN = (d) => () => { S.seq[k] = Math.round((S.seq[k] + d) * 20) / 20; S.seq = seqValid(S.seq);
+            if (k === 'near2' && S.seq.near1 <= S.seq.near2) S.seq.near1 = S.seq.near2 + 0.05; save(); };
+          return [btn('–', false, setN(-0.05), { flex: 0.42 }), btn(`${cmTxt(S.seq[k])} cm`, false, null, { kind: 'value', flex: 1.16, cap }),
+            btn('+', false, setN(0.05), { flex: 0.42 })];
+        })]] }];
     }
     rows = [tabs,
       ...(seqMode ? [] : [{ label: 'Drill', lines: [
