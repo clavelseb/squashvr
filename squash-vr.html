@@ -35,6 +35,9 @@
   h1 { margin: 6px 0 0; font: 700 clamp(38px, 7vw, 52px)/0.95 var(--display); letter-spacing: 0.01em; text-transform: uppercase; text-wrap: balance; }
   h1 span { color: var(--court); }
   .lede { margin: 0; color: var(--muted); max-width: 60ch; }
+  .short { display: inline-block; margin-top: 12px; font: 600 15px/1.3 var(--body); letter-spacing: 0.02em; color: var(--maple); text-decoration: none; border-bottom: 1px solid rgba(217, 180, 138, 0.35); overflow-wrap: anywhere; }
+  .short:hover { border-bottom-color: var(--maple); }
+  .short:focus-visible { outline: 3px solid var(--maple); outline-offset: 3px; border-radius: 2px; }
   #enter { font: 700 22px/1 var(--display); letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: var(--court);
     border: 0; border-radius: 12px; padding: 18px 20px; cursor: pointer; width: 100%; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25); }
   #enter:hover:not(:disabled) { background: #e0383d; }
@@ -61,8 +64,9 @@
 <div class="wrap">
   <main class="panel">
     <header>
-      <p class="eyebrow">WebXR · Meta Quest 2 · solo practice</p>
+      <p class="eyebrow">WebXR · solo practice</p>
       <h1>Squash <span>VR</span> Trainer</h1>
+      <a class="short" href="https://clavelseb.github.io/squashvr/" target="_blank" rel="noopener">clavelseb.github.io/squashvr</a>
     </header>
     <p class="lede">A regulation 9.75 × 6.40 m court and a ball that behaves like a warm double&#8209;yellow. Drill drives, boasts, drops, nicks and returns of serve without leaving your spot.</p>
     <button id="enter" disabled>Enter VR</button>
@@ -95,9 +99,10 @@
     <section aria-labelledby="dr">
       <h2 id="dr">Drills (menu)</h2>
       <ul class="drills">
-        <li>Free play</li><li>Lob serve</li><li>Hard serve</li><li>Volley feed</li><li>Loose ball</li><li>Boast feed</li><li>Boast practice</li><li>Drive practice</li>
+        <li><strong>Nick shot drill</strong></li><li><strong>Straight length drill</strong></li><li>Free play</li><li>Lob serve</li><li>Hard serve</li><li>Volley feed</li><li>Loose ball</li><li>Boast feed</li><li>Boast practice</li><li>Drive practice</li><li>Custom sequence</li>
       </ul>
-      <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the deep-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each drill can be set to crosscourt nick, straight nick, boast, deep drive or no target. Feed side <strong>Alternate</strong> runs a sequence of blocks instead, by default on the volley feed: 10 backhand crosscourt nicks, 10 backhand straight nicks, then the same on the forehand. Each block has its own drill, side, target, feed and number of shots (up to 30 blocks, set in the menu). <strong>Alternate +</strong> is a longer sequence of its own: for each of the four nicks, 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; you are placed once at the start of each block, the feeds are identical unless you turn on small variation, and every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu), with the total at the end.</p>
+      <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the straight-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each solo drill can be set to crosscourt nick, straight nick, boast, straight drive or no target.</p>
+      <p class="lede" style="margin-top:10px">The two <strong>main drills</strong> run a sequence of blocks off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. You are placed once at the start of each block, the feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The <strong>Custom sequence</strong>, among the solo drills, is a sequence of your own. The <strong>History</strong> tab keeps the last 10 drills played to the end, with their breakdown by shot and by kind of feed.</p>
     </section>
     <section aria-labelledby="ph">
       <h2 id="ph">Ball &amp; racquet physics</h2>
@@ -108,7 +113,7 @@
         <dt>Hit assist</dt><dd>The swing and the ball's path are traced through each frame; a ball that would clip the frame or just miss the head is put on the strings (off, 3, 6 or 10 cm in the menu). Perfect hits moves every hit to the sweet spot. Both are on by default, at 10 cm</dd>
         <dt>Tuning</dt><dd>The Ball physics tab adjusts 22 values (bounce, grip, shell lag, spin, air, strings) live, with rigid-ball and no-spin switches, a drop test, replays of your last hit and test shots in real time or slow motion</dd>
         <dt>Nick</dt><dd>Emerges from the ball flattening into the wall–floor joint; targets are solved and verified with the same physics</dd>
-        <dt>Racquet</dt><dd>Built from your CAD model: open throat with bridge, 500 cm² head, 16×20 strings, 8×18 mm frame; 135 g, balance 353 mm, string-bed trampoline, frame mishits</dd>
+        <dt>Racquet</dt><dd>Open throat with bridge, 500 cm² head, 16×20 strings, 8×18 mm frame; 135 g, balance 353 mm, string-bed trampoline, frame mishits</dd>
         <dt>Solver</dt><dd>Adaptive substeps, from 1 ms in flight down to 2 µs in hard impacts, swing interpolated between frames, speeding up through the frame as a real swing does: the same shot gives the same result at any refresh rate from 72 to 240 Hz</dd>
       </dl>
     </section>
@@ -2264,11 +2269,13 @@ void main(){
   gl_Position = uProj * uView * w;
 }`;
 
+const TIN_BOARD_H = 0.43;   // the tin board: front wall from the floor to the red tin line (0.43-0.48 m)
 const FS_COURT = COMMON + `
 in vec3 vW; in vec3 vN; in vec4 vC; in vec3 vL;
 uniform int uSurf;
 uniform vec4 uBall;   // xyz, radius
 uniform vec3 uEye;
+uniform sampler2D uTin;   // the tin board's print (premultiplied), across the wall, floor to the tin line
 out vec4 o;
 const float L = ${COURT.L.toFixed(3)};
 const float W2 = ${(COURT.W / 2).toFixed(3)};
@@ -2326,7 +2333,11 @@ void main(){
     float e1, e2;
     if (uSurf == 1) { n = vec3(0.0, 0.0, 1.0);
       line = max(max(band(p.y, 4.57, 4.62), band(p.y, 1.73, 1.78)), band(p.y, 0.43, 0.48));
-      if (p.y < 0.43) base = lin(vec3(0.86, 0.86, 0.88)) * (0.96 + 0.04*smoothstep(0.0, 0.43, p.y));
+      vec4 tin = texture(uTin, vec2((p.x + W2)/(2.0*W2), 1.0 - p.y/${TIN_BOARD_H.toFixed(3)}));   // sampled here, in uniform control flow
+      if (p.y < 0.43) {
+        base = lin(vec3(0.86, 0.86, 0.88)) * (0.96 + 0.04*smoothstep(0.0, 0.43, p.y));
+        if (tin.a > 0.004) base = mix(base, lin(tin.rgb/tin.a), tin.a);
+      }
       e1 = p.x + W2; e2 = W2 - p.x;
     } else if (uSurf == 2) { n = vec3(0.0, 0.0, -1.0);
       line = band(p.y, 2.13, 2.18);
@@ -2668,6 +2679,10 @@ class Renderer {
     gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 32, 16);
     gl.bindVertexArray(null);
     this.court = buildCourt(gl);
+    // the tin board's print (setTinSign); a clear texel until then
+    this.tinTex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, this.tinTex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
     this.racq = buildRacquet(gl);
     this.sphere = buildSphere(gl, 32, 20);
     this.lowSphere = buildSphere(gl, 16, 10);
@@ -2688,6 +2703,13 @@ class Renderer {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     this.updateTexture(t, canvas);
     return t;
+  }
+  // the print on the tin: mipmapped, and anisotropic where the browser offers it (the tin is seen at an angle)
+  setTinSign(canvas) {
+    const gl = this.gl, t = this.makeTexture(canvas, true);
+    const ext = gl.getExtension('EXT_texture_filter_anisotropic');
+    if (ext) gl.texParameterf(gl.TEXTURE_2D, ext.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+    this.tinTex = t;
   }
   updateTexture(t, canvas) {
     const gl = this.gl; gl.bindTexture(gl.TEXTURE_2D, t);
@@ -2728,6 +2750,7 @@ class Renderer {
     this._use(this.pCourt, proj, view);
     gl.uniformMatrix4fv(this.pCourt.u.uModel, false, M4.ident(this.tmp));
     gl.uniform3fv(this.pCourt.u.uEye, eye);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.tinTex); gl.uniform1i(this.pCourt.u.uTin, 0);
     if (sc.ball.on) gl.uniform4f(this.pCourt.u.uBall, sc.ball.p[0], sc.ball.p[1], sc.ball.p[2], sc.ball.r); else gl.uniform4f(this.pCourt.u.uBall, 0, 0, 0, 0);
     for (let i = 0; i < 6; i++) { gl.uniform1i(this.pCourt.u.uSurf, i); this._draw(this.court[i]); }
     // ---- strings (alpha to coverage) ----
@@ -2974,23 +2997,26 @@ class MenuPanel {
     this.buttons = []; this.hover = -1; this.dirty = true;
     this.sizeM = [0.78, 0.78 * height / width]; // metres
   }
-  // rows: [{label, items:[{text, active, action, flex, kind}]}]
+  // rows: [{label, minor, items | lines:[[{text, active, action, flex, kind, h, sub, cap, small}]]}]
+  // A line is as tall as its tallest item (h, default 70). kind 'big': a large title with a line of text under it
+  // (sub); a minor row has a quieter label (the solo drills under the main ones).
   layout(title, subtitle, rows) {
     const W = this.canvas.width, pad = 46, gap = 12, bh = 70;
     let y = 140; this.buttons = []; this.rowsDraw = [];
     for (const row of rows) {
-      if (row.label) { this.rowsDraw.push({ label: row.label, y }); y += 40; }
+      if (row.label) { this.rowsDraw.push({ label: row.label, y, minor: !!row.minor }); y += row.minor ? 36 : 40; }
       const lines = row.lines || [row.items];
       for (const items of lines) {
         const tot = items.reduce((s, it) => s + (it.flex || 1), 0);
         const avail = W - 2 * pad - gap * (items.length - 1);
+        const lh = items.reduce((m, it) => Math.max(m, it.h || bh), 0);
         let x = pad;
         for (const it of items) {
           const w = avail * (it.flex || 1) / tot;
-          this.buttons.push({ x, y, w, h: bh, ...it });
+          this.buttons.push({ ...it, x, y, w, h: lh });
           x += w + gap;
         }
-        y += bh + gap;
+        y += lh + gap;
       }
       y += 14;
     }
@@ -3011,8 +3037,8 @@ class MenuPanel {
     ctx.fillText(this.subtitle || '', W - 46, 92);
     ctx.textAlign = 'left';
     for (const r of this.rowsDraw) {
-      ctx.fillStyle = 'rgba(190,200,215,0.75)'; ctx.font = `600 24px ${FONT}`;
-      ctx.fillText(r.label.toUpperCase().split('').join(String.fromCharCode(8202)), 50, r.y + 26);
+      ctx.fillStyle = r.minor ? 'rgba(190,200,215,0.55)' : 'rgba(190,200,215,0.75)'; ctx.font = `600 ${r.minor ? 21 : 24}px ${FONT}`;
+      ctx.fillText(r.label.toUpperCase().split('').join(String.fromCharCode(8202)), 50, r.y + (r.minor ? 23 : 26), W - 100);
     }
     this.buttons.forEach((b, i) => {
       const hov = i === this.hover;
@@ -3025,7 +3051,12 @@ class MenuPanel {
       if (b.kind === 'primary') { ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.stroke(); }
       if (b.kind === 'tab' && b.active) { ctx.fillStyle = '#cf2a2f'; ctx.fillRect(b.x + 18, b.y + b.h - 7, b.w - 36, 5); }
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      if (b.cap) {   // value cell with a caption above the value (ball tuning page); changed values in amber
+      if (b.kind === 'big') {   // main drill: title, and a line under it
+        ctx.fillStyle = '#ffffff'; ctx.font = `700 36px ${FONT}`;
+        ctx.fillText(b.text, b.x + b.w / 2, b.y + b.h * 0.40, b.w - 24);
+        ctx.fillStyle = b.active ? 'rgba(255,255,255,0.88)' : 'rgba(190,200,215,0.85)'; ctx.font = `500 23px ${FONT}`;
+        ctx.fillText(b.sub || '', b.x + b.w / 2, b.y + b.h * 0.74, b.w - 24);
+      } else if (b.cap) {   // value cell with a caption above the value (ball tuning page); changed values in amber
         ctx.fillStyle = 'rgba(190,200,215,0.78)'; ctx.font = `500 19px ${FONT}`;
         ctx.fillText(b.cap, b.x + b.w / 2, b.y + 19, b.w - 10);
         ctx.fillStyle = b.mod ? '#ffc46b' : '#ffffff'; ctx.font = `700 26px ${FONT}`;
@@ -3132,6 +3163,33 @@ class LabelPanel {
   }
 }
 
+// The tin board's print (front wall, from the floor to the red tin line): the game's name and its address, like the
+// sponsor's board on a real court. Drawn once, transparent around the letters; the court shader lays it on the tin,
+// lit and shadowed like the wall (Renderer.setTinSign). wallW x tinH in metres: 2048 px across, about 3 mm a pixel.
+function tinSignCanvas(wallW, tinH) {
+  const cw = 2048, ch = Math.round(cw * tinH / wallW);
+  const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+  const ctx = c.getContext('2d');
+  const dark = '#1d2128', red = '#c8141a', grey = '#3a404a';
+  const base = Math.round(ch * 0.70);                      // one baseline for both
+  const spacing = (px) => { try { ctx.letterSpacing = `${px}px`; } catch (e) { /* older browsers: no spacing */ } };
+  const nameFont = `800 76px ${FONT}`, linkFont = `600 50px ${FONT}`, link = 'clavelseb.github.io/squashvr';
+  const parts = [['SQUASH ', dark], ['VR', red], [' TRAINER', dark]];
+  spacing(5); ctx.font = nameFont;
+  const wParts = parts.map(([t]) => ctx.measureText(t).width), wName = wParts.reduce((a, b) => a + b, 0);
+  spacing(1); ctx.font = linkFont;
+  const wLink = ctx.measureText(link).width;
+  const gap = 56, bar = 6;
+  let x = (cw - (wName + 2 * gap + bar + wLink)) / 2;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  spacing(5); ctx.font = nameFont;
+  parts.forEach(([t, col], i) => { ctx.fillStyle = col; ctx.fillText(t, x, base); x += wParts[i]; });
+  x += gap; ctx.fillStyle = red; ctx.fillRect(x, base - 58, bar, 68);   // a red rule between the two
+  x += bar + gap;
+  spacing(1); ctx.font = linkFont; ctx.fillStyle = grey; ctx.fillText(link, x, base);
+  return c;
+}
+
 // =====================================================================
 //  SQUASH VR TRAINER - application (WebXR, Meta Quest)
 // =====================================================================
@@ -3140,25 +3198,38 @@ class LabelPanel {
 
 
 
-const VERSION = '1.19';
+const VERSION = '1.20.2';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
 // from 20 cm nearer to 20 cm further than this.
 const HZ0 = -0.20, HZ_MIN = HZ0 - 0.20, HZ_MAX = HZ0 + 0.20;
-// Feed side "Alternate" (v1.15): a sequence of practice blocks, each a drill on one side (or both, every other feed)
-// with one target and a number of shots. Default: the volley feed, 10 crosscourt and 10 straight nicks on the
-// backhand, then the same on the forehand.
+// Drill programs (v1.20, S.prog). Two main drills, each a sequence of practice blocks (a drill on one side, or both
+// every other feed, with one target, one kind of feed and a number of shots), placed once per block and scored 0-3
+// points a shot:
+//   nick    Nick shot drill (v1.18-v1.19 feed side "Alternate +"), sequence S.seqPlus
+//   length  Straight length drill: the same feeds, straight drives scored on length and tightness, S.seqLen
+// then the solo drills, less prominent in the menu:
+//   custom  Custom sequence (v1.15-v1.19 feed side "Alternate"), S.seq: by default the volley feed, 10 crosscourt and
+//           10 straight nicks on the backhand, then the same on the forehand
+//   solo    one drill (S.drill) on the side S.side: fh, bh or alt (both, every other feed), with S.targets[drill]
+const PROGS = ['nick', 'length', 'custom', 'solo'];
+const PROG_NAME = { nick: 'Nick shot drill', length: 'Straight length drill', custom: 'Custom sequence', solo: 'Solo drill' };
 const SEQ_DRILLS = ['volley', 'loose', 'boast', 'drive', 'rail', 'lob', 'hard'];   // any drill but free play
 const SEQ_SIDES = ['fh', 'bh', 'alt'], SEQ_TARGETS = ['cross', 'straight', 'boast', 'drive', 'off'], SEQ_MAX = 30;
-// Feed side "Alternate +" (v1.18, default changed in v1.19): its own sequence. For each of the four nicks: 10 off the
-// usual feed, 10 slightly wider, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster (80 shots a
-// nick, 320 in all; FEED_VARIANTS in feeder.js). v1.18's 10 nearer the front wall are gone (too soft).
+// Nick shot drill (v1.18 "Alternate +", default changed in v1.19): for each of the four nicks, 10 off the usual feed,
+// 10 slightly wider, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster (80 shots a nick, 320 in
+// all; FEED_VARIANTS in feeder.js). v1.18's 10 nearer the front wall are gone (too soft).
+// Straight length drill (v1.20): the same feeds on each side, straight drives (160 shots).
 const SEQ_NICKS = [['bh', 'cross'], ['bh', 'straight'], ['fh', 'cross'], ['fh', 'straight']];
 const SEQ_PLUS_FEEDS = [['normal', 10], ['wide', 10], ['behind', 10], ['behind2', 10], ['fast', 20], ['fast2', 20]];
 const seqDefault = () => ({ vary: false, blocks: SEQ_NICKS.map(([side, target]) => ({ drill: 'volley', side, target, feed: 'normal', n: 10 })) });
 const seqPlusDefault = () => ({ vary: false, blocks: SEQ_NICKS.flatMap(([side, target]) =>
   SEQ_PLUS_FEEDS.map(([feed, n]) => ({ drill: 'volley', side, target, feed, n }))) });
+const seqLenDefault = () => ({ vary: false, blocks: ['bh', 'fh'].flatMap(side =>
+  SEQ_PLUS_FEEDS.map(([feed, n]) => ({ drill: 'volley', side, target: 'drive', feed, n }))) });
+const SEQ_KEY = { nick: 'seqPlus', length: 'seqLen', custom: 'seq' };
+const SEQ_DEF = { nick: seqPlusDefault, length: seqLenDefault, custom: seqDefault };
 function seqValid(q, def = seqDefault) {
   if (!q || typeof q !== 'object' || !Array.isArray(q.blocks)) return def();
   const blocks = q.blocks.filter(b => b && typeof b === 'object').slice(0, SEQ_MAX).map(b => ({
@@ -3167,14 +3238,14 @@ function seqValid(q, def = seqDefault) {
     n: Math.max(1, Math.min(50, Math.round(+b.n) || 10)) }));
   return blocks.length ? { vary: !!q.vary, blocks } : def();
 }
-// points for a near miss (both sequences): 3 within near3 of the nick, 2 within near2, 1 within near1 (metres)
+// points for a near miss (every sequence): 3 within near3 of the nick, 2 within near2, 1 within near1 (metres)
 function nickPtsValid(o) {
   const cl = (v, d) => Math.max(0, Math.min(1.5, Math.round((v === undefined || !Number.isFinite(+v) ? d : +v) * 20) / 20));
   const near3 = cl(o && o.near3, 0.10), near2 = Math.max(cl(o && o.near2, 0.30), near3 + 0.05);
   return { near3, near2, near1: Math.max(cl(o && o.near1, 0.70), near2 + 0.05) };
 }
 const DEFAULTS = {
-  hand: 'right', drill: 'free', side: 'fh', gap: 2.0, autoPlace: true,
+  hand: 'right', prog: 'nick', drill: 'free', side: 'fh', gap: 2.0, autoPlace: true,
   ball: 'dy', temp: 'w50', grip: { a: 0, b: 0, c: 0, hx: 0, hy: 0, hz: HZ0 }, showSpeed: true, showBounce: true, blur: true, showFps: false,
   fps: 'max', quality: 'normal', vol: 0.8, haptics: 1.0, autoReturn: true, moveStick: true, moveHand: 'racquet', assist: 'large', assistPerfect: true,
   tune: {}, replaySpeed: 0.5,      // ball physics overrides (Ball tab: only values changed from the defaults), replay / test-shot speed
@@ -3204,7 +3275,11 @@ const S = (() => {
   // v1.19: the new Alternate + default replaces the v1.18 sequence once (it had the 'nearer front' blocks)
   if (!(saved.seqPlusRev >= 1)) o.seqPlus = seqPlusDefault();
   o.seqPlusRev = 1;
-  if (!['fh', 'bh', 'alt', 'altp'].includes(o.side)) o.side = 'fh';
+  o.seqLen = seqValid(saved.seqLen, seqLenDefault);
+  // v1.20: drill programs. The old feed sides become programs: Alternate + = the Nick shot drill, Alternate = the
+  // custom sequence; settings from before without either stay on the solo drill they had (a new install: Nick shots)
+  if (!PROGS.includes(saved.prog)) o.prog = saved.side === 'altp' ? 'nick' : saved.side === 'alt' ? 'custom' : (Object.keys(saved).length ? 'solo' : 'nick');
+  if ((!PROGS.includes(saved.prog) && saved.side === 'alt') || !['fh', 'bh', 'alt'].includes(o.side)) o.side = 'fh';   // 'alt' now = both sides
   // v1.16 kept the near-miss distances in the Alternate sequence; v1.18 shares them, with 3 points within 10 cm
   o.nickPts = nickPtsValid(saved.nickPts || (saved.seq && { near2: saved.seq.near2, near1: saved.seq.near1 }));
   // v1.17: new defaults, a warm (50 C) double yellow, rigid ball, no spin. Applied once to settings saved before:
@@ -3242,6 +3317,7 @@ const ui = {
 };
 if (!gl) { ui.status.textContent = 'WebGL 2 is not available in this browser.'; throw new Error('no webgl2'); }
 const R = new Renderer(gl);
+R.setTinSign(tinSignCanvas(COURT.W, TIN_BOARD_H));   // the game's name and address on the tin
 const audio = new SoundEngine(); audio.setVolume(S.vol);
 const menu = new MenuPanel(1024, 1500);
 const hint = new TextPanel();
@@ -3358,7 +3434,8 @@ const G = {
   handBall: [0, 0, 0], handHist: [],
   turnLatch: false, lastHapticT: 0,
   placeNext: false,          // place the player at the next stance the solver sends (a new drill, side or block)
-  sq: { i: 0, shot: 0, recs: [], done: false, nextAt: 0, shown: false },   // Alternate sequence: block, shots done in it, every shot's points
+  sq: { i: 0, shot: 0, recs: [], done: false, nextAt: 0, shown: false },   // sequence: block, shots done in it, every shot's points
+  seqEdit: false, seqPage: undefined, seqPageFor: -1, histSel: 0,             // menu: block editor open, its page; History row shown
 };
 
 const worldFromRef = M4.create(), refFromWorld = M4.create();
@@ -3418,7 +3495,7 @@ function onSolver(m) {
     if (m.target) {
       const tg = m.target;
       if (tg.kind === 'boast') label.set(`${kmh(tg.speed)} km/h`, 'boast: hit the side wall here');
-      else if (tg.kind === 'drive') label.set(`${kmh(tg.speed)} km/h`, 'deep drive: aim here');
+      else if (tg.kind === 'drive') label.set(`${kmh(tg.speed)} km/h`, 'straight drive: aim here');
       else label.set(`${kmh(tg.speed)} km/h`, tg.wall < 0 ? 'nick on the left wall' : 'nick on the right wall');
       R.updateTexture(labelTex, label.canvas);
     }
@@ -3475,8 +3552,14 @@ function requestFeeds(n) {
   }, 0);
 }
 let lastSolverT = 45;
-// k: the drill chosen in the menu (S.drill). With feed side Alternate, the current block of the sequence decides the
-// drill, side and target instead (drillNow, sideNow, targetMode); calling this again re-solves the current block.
+// k: the solo drill (S.drill). In a sequence program the current block decides the drill, side and target instead
+// (drillNow, sideNow, targetMode); calling this again re-solves the current block.
+// menu: a main drill or the custom sequence (from its start), or a solo drill
+function pickProg(p) {
+  if (S.prog === p) return;
+  S.prog = p; G.seqPage = undefined; G.seqEdit = false; save(); seqRestart();
+}
+function pickSolo(k) { S.prog = 'solo'; setDrill(k); }
 function setDrill(k) {
   S.drill = k; save();
   G.hit = null; G.over = false; G.nick = null;
@@ -3488,8 +3571,9 @@ function setDrill(k) {
 
 // ---------------------------------------------------------------- nick targeting & scoring
 const TARGET_DRILLS = { volley: 1, loose: 1, boast: 1, drive: 1, rail: 1 };
-const seqOn = () => S.side === 'alt' || S.side === 'altp';
-const seqKey = () => (S.side === 'altp' ? 'seqPlus' : 'seq');        // Alternate + has its own sequence
+const seqOn = () => S.prog !== 'solo';                                // a sequence program (main drill or custom)
+const seqKey = () => SEQ_KEY[S.prog] || 'seq';
+const seqDef = () => SEQ_DEF[S.prog] || seqDefault;
 const SQ = () => S[seqKey()];
 const seqHold = () => seqOn() && (G.sq.done || !!G.sq.nextAt);   // sequence over, or between two blocks: no feeds
 const seqBlock = () => SQ().blocks[Math.min(G.sq.i, SQ().blocks.length - 1)];
@@ -3550,7 +3634,7 @@ function driveStatsLine() {
 //   or the floor first that close to the wall; 2 = within near2 (30 cm); 1 = within near1 (70 cm), all set in the menu. Boast: 3 nick or tight, 2 good, 1 any boast that
 //   stays up. Drive: 3 = 85 or more (great) or a nick, 2 = 70 (good), 1 = 50. Tin, out, down or not hit: 0.
 const SIDE_TXT = { fh: 'forehand', bh: 'backhand', alt: 'both sides' }, SIDE_SHORT = { fh: 'FH', bh: 'BH', alt: 'FH+BH' };
-const TARGET_TXT = { cross: 'crosscourt nicks', straight: 'straight nicks', boast: 'boasts', drive: 'deep drives', off: '' };
+const TARGET_TXT = { cross: 'crosscourt nicks', straight: 'straight nicks', boast: 'boasts', drive: 'straight drives', off: '' };
 const blockTarget = (b) => (TARGET_DRILLS[b.drill] ? b.target : 'off');
 const FEED_TXT = { normal: 'Normal feed', wide: 'Wider feed', behind: 'Behind you', behind2: 'Far behind', fast: 'Faster feed', fast2: 'Even faster' };
 const FEED_SHORT = { normal: '', wide: ' wide', behind: ' behind', behind2: ' far behind', fast: ' fast', fast2: ' faster' };
@@ -3587,12 +3671,12 @@ function seqTotals() {
 }
 function seqLine() {
   const q = G.sq, B = SQ().blocks, b = seqBlock(), t = seqTotals();
-  if (q.done) return `Sequence done: ${t.tot} / ${t.max} points · ${btnName(false, 4)}: start again`;
+  if (q.done) return `${PROG_NAME[S.prog]} done: ${t.tot} / ${t.max} points · ${btnName(false, 4)}: start again`;
   const bp = t.per[q.i] || { p: 0 };
   return `Block ${q.i + 1}/${B.length} · ${blockName(b)} · shot ${Math.min(q.shot + 1, b.n)}/${b.n} · ${bp.p} pts · total ${t.tot} · ${btnName(false, 4)}: feed now`;
 }
 function seqRestart() {
-  S.seq = seqValid(S.seq); S.seqPlus = seqValid(S.seqPlus, seqPlusDefault);
+  S.seq = seqValid(S.seq); S.seqPlus = seqValid(S.seqPlus, seqPlusDefault); S.seqLen = seqValid(S.seqLen, seqLenDefault);
   G.sq = { i: 0, shot: 0, recs: [], done: false, nextAt: 0, shown: false };
   if (seqOn()) { setDrill(S.drill); showMain(`Block 1 of ${SQ().blocks.length}`, '#9fd3ff'); board.set(undefined, undefined, blockName(seqBlock()), seqLine()); }
 }
@@ -3628,17 +3712,49 @@ function seqSummary() {
   const t = seqTotals(), B = SQ().blocks, np = S.nickPts;
   audio.beep(988, 0.10, 0.16); setTimeout(() => audio.beep(1319, 0.16, 0.16), 140);
   showMain(t.max ? `${t.tot} / ${t.max}` : 'Sequence done', '#ffd34d');
+  const saved = recordHistory(t, B);
+  const allDrive = B.every(b => blockTarget(b) === 'drive');
+  const legend = allDrive ? '3 = drive 85+ (great)  ·  2 = drive 70+ (good)  ·  1 = drive 50+'
+    : `3 = nick or within ${cmTxt(np.near3)} cm (tight boast, great drive) · 2 = within ${cmTxt(np.near2)} cm · 1 = within ${cmTxt(np.near1)} cm`;
   board.set(undefined, undefined, t.max ? `points (${Math.round(100 * t.tot / t.max)} %) · ${t.n3} × 3 · ${t.n2} × 2 · ${t.n1} × 1` : 'no shots at a target',
-    `Sequence done · ${btnName(false, 4)}: start again`, undefined,
-    ...(B.length <= 6 ? [B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('   ·   '),
-      t.max ? `3 = nick or within ${cmTxt(np.near3)} cm (tight boast, great drive) · 2 = within ${cmTxt(np.near2)} cm · 1 = within ${cmTxt(np.near1)} cm` : '']
-      // a long sequence (Alternate +): totals per shot, then per kind of feed
-      : [seqGroups(B, t, (b) => blockName(b, true, true)), seqGroups(B, t, (b) => FEED_TXT[b.feed || 'normal'].replace(' feed', '').toLowerCase())]));
+    `${PROG_NAME[S.prog]} done${saved ? ' · saved in History' : ''} · ${btnName(false, 4)}: start again`, undefined,
+    ...(B.length <= 6 ? [B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('   ·   '), t.max ? legend : '']
+      // a long sequence (the main drills): totals per shot, then per kind of feed
+      : [groupLine(groupTotals(B, t, groupKey)), groupLine(groupTotals(B, t, feedKey))]));
 }
-function seqGroups(B, t, key) {
+const groupKey = (b) => blockName(b, true, true);                                    // BH cross, FH drive...
+const feedKey = (b) => FEED_TXT[b.feed || 'normal'].replace(' feed', '').toLowerCase();   // normal, wider, far behind...
+function groupTotals(B, t, key) {   // [[name, points, max], ...] in the order met
   const g = new Map();
-  B.forEach((b, i) => { const k = key(b), o = g.get(k) || { p: 0, m: 0 }; o.p += t.per[i].p; o.m += t.per[i].m; g.set(k, o); });
-  return [...g].map(([k, o]) => `${k} ${o.m ? `${o.p}/${o.m}` : '–'}`).join('  ·  ');
+  B.forEach((b, i) => { const k = key(b), o = g.get(k) || [k, 0, 0]; o[1] += t.per[i].p; o[2] += t.per[i].m; g.set(k, o); });
+  return [...g.values()];
+}
+const groupLine = (G2) => G2.map(([k, p, m]) => `${k} ${m ? `${p}/${m}` : '–'}`).join('  ·  ');
+
+// ---------------------------------------------------------------- history of completed sequences (v1.20)
+// The last 10 sequences played to the end (a main drill or the custom sequence), newest first, in their own storage
+// key so they never mix with the settings. A row: when, which program, the points and the breakdowns, ball and feeds.
+const HIST_KEY = 'squashvr.history', HIST_MAX = 10;
+const HIST = (() => {
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); } catch (e) { h = []; }
+  return Array.isArray(h) ? h.filter(e => e && typeof e === 'object' && PROGS.includes(e.prog) && e.max > 0 && Number.isFinite(e.tot)).slice(0, HIST_MAX) : [];
+})();
+function saveHist() { try { localStorage.setItem(HIST_KEY, JSON.stringify(HIST)); } catch (e) { /* storage unavailable */ } }
+function recordHistory(t, B) {
+  if (!t.max) return false;
+  HIST.unshift({ t: Date.now(), prog: S.prog, tot: t.tot, max: t.max, n3: t.n3, n2: t.n2, n1: t.n1, shots: G.sq.recs.length,
+    groups: groupTotals(B, t, groupKey), feeds: groupTotals(B, t, feedKey), ball: S.ball, temp: WARM_T[S.temp] || Math.round(phys.T), vary: !!SQ().vary });
+  if (HIST.length > HIST_MAX) HIST.length = HIST_MAX;
+  G.histSel = 0; saveHist();
+  return true;
+}
+const pctOf = (p, m) => (m ? Math.round(100 * p / m) : 0);
+function bestPct(prog) { let b = -1; for (const e of HIST) if (e.prog === prog) b = Math.max(b, pctOf(e.tot, e.max)); return b; }
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function whenTxt(ms) {
+  const d = new Date(ms), p2 = (n) => String(n).padStart(2, '0');
+  return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} · ${p2(d.getHours())}:${p2(d.getMinutes())}`;
 }
 const statsLine = (f) => (seqOn() ? seqLine() : f());
 
@@ -4001,12 +4117,12 @@ function refreshHud() {
     return;
   }
   const d = DRILLS[S.drill];
-  const side = S.drill === 'free' ? '' : (S.side === 'fh' ? ' · forehand' : S.side === 'bh' ? ' · backhand' : ' · alternate');
+  const side = S.drill === 'free' ? '' : (S.side === 'fh' ? ' · forehand' : S.side === 'bh' ? ' · backhand' : ' · both sides');
   const tip = S.drill === 'free' ? `${btnName(false, 4)}: ball to hand · trigger: toss` : `${btnName(false, 4)}: feed now`;
   if (nickMode()) {
     const mode = targetMode();
     if (mode === 'boast') board.set(undefined, undefined, `${d.name}${side} · boast target`, boastStatsLine());
-    else if (mode === 'drive') board.set(undefined, undefined, `${d.name}${side} · deep drive target`, driveStatsLine());
+    else if (mode === 'drive') board.set(undefined, undefined, `${d.name}${side} · straight drive target`, driveStatsLine());
     else board.set(undefined, undefined, `${d.name}${side} · ${mode === 'straight' ? 'straight' : 'crosscourt'} nick target`, nickStatsLine());
     return;
   }
@@ -4289,7 +4405,7 @@ function processControls(dt) {
   // recall / feed now
   if (pressed(rh, 4) || pressed(bh, 4)) {
     if (drillNow() === 'free') recallBall();
-    else if (seqOn() && G.sq.done) seqRestart();                        // Alternate sequence over: start again
+    else if (seqOn() && G.sq.done) seqRestart();                        // sequence over: start again
     else if (seqOn() && G.sq.nextAt) G.sq.nextAt = G.time;              // between blocks: no need to wait
     else {
       if (G.replay) endReplay();
@@ -4368,6 +4484,7 @@ function toggleMenu() {
     audio.beep(660, 0.05, 0.12);
   } else {
     audio.beep(520, 0.05, 0.10);
+    G.seqEdit = false;                          // the block editor opens closed next time
     if (tuneDirty) { tuneDirty = false; configureFeeds(); lastSolverT = phys.T; }   // feeds and targets with the new ball physics
   }
 }
@@ -4403,6 +4520,7 @@ function buildMenu() {
   const page = G.menuPage;
   const tabs = { items: [
     btn('Practice', page === 'practice', () => { G.menuPage = 'practice'; }, { kind: 'tab' }),
+    btn('History', page === 'history', () => { G.menuPage = 'history'; }, { kind: 'tab', flex: 0.9 }),
     btn('Racquet & settings', page === 'racquet', () => { G.menuPage = 'racquet'; }, { kind: 'tab', flex: 1.4 }),
     btn('Ball physics', page === 'ball', () => { G.menuPage = 'ball'; }, { kind: 'tab', flex: 1.1 })] };
   const bottom = { items: [
@@ -4416,69 +4534,91 @@ function buildMenu() {
   const setTemp = (t) => () => { S.temp = t; if (t === 'cold') applyBall.didCold = false; save(); applyBall(); setDrill(S.drill); refreshHud(); };
   let rows;
   if (page === 'practice') {
-    const seqMode = seqOn();
-    const feedSide = { label: seqMode ? `Feed side  ·  ${S.side === 'altp' ? 'Alternate +' : 'Alternate'} runs the sequence below` : 'Feed side', items: [
-      btn('Forehand', S.side === 'fh', () => { S.side = 'fh'; save(); setDrill(S.drill); }),
-      btn('Backhand', S.side === 'bh', () => { S.side = 'bh'; save(); setDrill(S.drill); }),
-      btn('Alternate', S.side === 'alt', () => { if (S.side !== 'alt') { S.side = 'alt'; G.seqPage = 0; save(); seqRestart(); } }),
-      btn('Alternate +', S.side === 'altp', () => { if (S.side !== 'altp') { S.side = 'altp'; G.seqPage = 0; save(); seqRestart(); } })] };
-    // Alternate: the sequence of blocks (drill, side, target, shots), editable here; the drill and target rows of the
-    // other feed sides are not shown, each block has its own
-    let seqRows = [];
+    const prog = S.prog, seqMode = seqOn();
+    // the two main drills, big: how many shots, and the best score kept in the History
+    const big = (p) => {
+      const n = S[SEQ_KEY[p]].blocks.reduce((a, b) => a + b.n, 0), bp = bestPct(p);
+      return btn(PROG_NAME[p], prog === p, () => pickProg(p), { kind: 'big', h: 112, sub: `${n} volleys${bp >= 0 ? `  ·  best ${bp} %` : ''}` });
+    };
+    const mainRows = [{ label: 'Main drills', lines: [[big('nick'), big('length')]] }];
+    // a sequence under way (a main drill or the custom sequence): where it is, restart, small variation, and the
+    // block editor (closed unless asked for)
+    const seqRows = [];
     if (seqMode) {
       const q = G.sq, SEQ = SQ(), B = SEQ.blocks, t = seqTotals(), cb = seqBlock();
       const status = q.done ? `done: ${t.tot} / ${t.max} points` : `block ${q.i + 1} of ${B.length}, shot ${Math.min(q.shot + 1, cb.n)} of ${cb.n} · ${t.tot} points`;
-      const cyc = (arr, v) => arr[(arr.indexOf(v) + 1) % arr.length];
-      // editing the block under way re-solves its feeds (and places the player again); the others take effect when reached
-      const edit = (j, fn) => () => {
-        fn(B[j]); S[seqKey()] = seqValid(SEQ, S.side === 'altp' ? seqPlusDefault : seqDefault); save();
-        if (j === G.sq.i && !G.sq.done) { if (G.sq.shot >= SQ().blocks[j].n && !G.sq.nextAt) G.sq.nextAt = G.time + 0.5; setDrill(S.drill); }
-      };
-      const TG = { cross: 'Cross nick', straight: 'Straight nick', boast: 'Boast', drive: 'Deep drive', off: 'No target' };
-      // each block: drill, side, target, feed (normal / wider / nearer the front / behind you / faster), shots, remove
-      const blockLine = (b, j) => [
-        btn(DRILLS[b.drill].short, j === q.i && !q.done, edit(j, (x) => { x.drill = cyc(SEQ_DRILLS, x.drill); }), { flex: 1.25, small: true }),
-        btn({ fh: 'Forehand', bh: 'Backhand', alt: 'Both sides' }[b.side], false, edit(j, (x) => { x.side = cyc(SEQ_SIDES, x.side); }), { flex: 1.0, small: true }),
-        TARGET_DRILLS[b.drill] ? btn(TG[b.target], false, edit(j, (x) => { x.target = cyc(SEQ_TARGETS, x.target); }), { flex: 1.15, small: true })
-          : btn('No target', false, null, { kind: 'value', flex: 1.15, small: true }),
-        btn(FEED_TXT[b.feed || 'normal'], b.feed && b.feed !== 'normal', edit(j, (x) => { x.feed = cyc(FEED_VARIANTS, x.feed || 'normal'); }), { flex: 1.1, small: true }),
-        btn('–', false, edit(j, (x) => { x.n = x.n > 10 ? x.n - 5 : x.n - 1; }), { flex: 0.36 }),
-        btn(String(b.n), false, null, { kind: 'value', flex: 0.45 }),
-        btn('+', false, edit(j, (x) => { x.n = x.n >= 10 ? x.n + 5 : x.n + 1; }), { flex: 0.36 }),
-        B.length > 1 ? btn('✕', false, () => { SQ().blocks.splice(j, 1); save(); seqRestart(); }, { flex: 0.36, small: true })
-          : btn('', false, null, { kind: 'value', flex: 0.36 })];
-      // a long sequence is shown 6 blocks at a time; the page follows the block under way unless paged by hand
-      const PER = 6, pages = Math.ceil(B.length / PER);
-      if (G.seqPage === undefined || G.seqPageFor !== q.i) { G.seqPage = Math.floor(Math.min(q.i, B.length - 1) / PER); G.seqPageFor = q.i; }
-      G.seqPage = Math.max(0, Math.min(pages - 1, G.seqPage));
-      const p0 = G.seqPage * PER, shown = B.slice(p0, p0 + PER);
-      const pager = pages > 1 ? [[
-        btn('◀', false, G.seqPage > 0 ? () => { G.seqPage--; } : null, { flex: 0.5 }),
-        btn(`blocks ${p0 + 1}–${p0 + shown.length} of ${B.length}  ·  page ${G.seqPage + 1} / ${pages}`, false, null, { kind: 'value', flex: 4.2, small: true }),
-        btn('▶', false, G.seqPage < pages - 1 ? () => { G.seqPage++; } : null, { flex: 0.5 })]] : [];
-      const def = S.side === 'altp' ? seqPlusDefault : seqDefault;
-      seqRows = [{ label: `${S.side === 'altp' ? 'Alternate + sequence' : 'Alternate sequence'}  ·  ${status}`, lines: [...shown.map((b, k) => blockLine(b, p0 + k)), ...pager, [
-        btn('Add block', false, B.length < SEQ_MAX ? () => { SQ().blocks.push(Object.assign({}, B[B.length - 1])); G.seqPage = Math.floor((B.length - 1) / PER); G.seqPageFor = q.i; save(); } : null, { flex: 1.0, small: true }),
-        btn('Default', false, () => { S[seqKey()] = def(); G.seqPage = 0; save(); seqRestart(); }, { flex: 0.85, small: true }),
-        btn(SEQ.vary ? 'Small variation: on' : 'Small variation: off', SEQ.vary, () => { SQ().vary = !SQ().vary; save(); setDrill(S.drill); }, { flex: 1.75, small: true }),
-        btn('Restart', false, () => seqRestart(), { flex: 0.9, small: true })],
-        // near-miss distances (from the nick: height on the side wall, or a floor bounce's distance from the wall)
-        [['near3', '3 points within'], ['near2', '2 points within'], ['near1', '1 point within']].flatMap(([k, cap]) => {
-          const setN = (d) => () => { const o = Object.assign({}, S.nickPts); o[k] = Math.max(0, Math.round((o[k] + d) * 20) / 20);
-            S.nickPts = nickPtsValid(o); save(); };
-          return [btn('–', false, setN(-0.05), { flex: 0.36 }), btn(`${cmTxt(S.nickPts[k])} cm`, false, null, { kind: 'value', flex: 0.95, cap }),
-            btn('+', false, setN(0.05), { flex: 0.36 })];
-        })] }];
+      const now = q.done ? (t.max ? `Done: ${t.tot} / ${t.max} points (${pctOf(t.tot, t.max)} %), kept in History` : 'Done')
+        : `Now: ${blockName(cb)}${q.nextAt ? '  ·  next block coming' : ''}`;
+      const lines = [
+        [btn(now, false, null, { kind: 'value', small: true, flex: 3.3 }), btn('Restart', false, () => seqRestart(), { flex: 1 })],
+        [btn(SEQ.vary ? 'Small variation: on' : 'Small variation: off', SEQ.vary, () => { SQ().vary = !SQ().vary; save(); setDrill(S.drill); }, { flex: 1.6, small: true }),
+          btn(G.seqEdit ? 'Hide the blocks' : `Edit the blocks (${B.length})`, G.seqEdit, () => { G.seqEdit = !G.seqEdit; }, { flex: 1.6, small: true })]];
+      if (G.seqEdit) {
+        const cyc = (arr, v) => arr[(arr.indexOf(v) + 1) % arr.length];
+        // editing the block under way re-solves its feeds (and places the player again); the others take effect when reached
+        const edit = (j, fn) => () => {
+          fn(B[j]); S[seqKey()] = seqValid(SEQ, seqDef()); save();
+          if (j === G.sq.i && !G.sq.done) { if (G.sq.shot >= SQ().blocks[j].n && !G.sq.nextAt) G.sq.nextAt = G.time + 0.5; setDrill(S.drill); }
+        };
+        const TG = { cross: 'Cross nick', straight: 'Straight nick', boast: 'Boast', drive: 'Straight drive', off: 'No target' };
+        // each block: drill, side, target, feed (normal / wider / behind you / far behind / faster / even faster), shots, remove
+        const blockLine = (b, j) => [
+          btn(DRILLS[b.drill].short, j === q.i && !q.done, edit(j, (x) => { x.drill = cyc(SEQ_DRILLS, x.drill); }), { flex: 1.25, small: true }),
+          btn({ fh: 'Forehand', bh: 'Backhand', alt: 'Both sides' }[b.side], false, edit(j, (x) => { x.side = cyc(SEQ_SIDES, x.side); }), { flex: 1.0, small: true }),
+          TARGET_DRILLS[b.drill] ? btn(TG[b.target], false, edit(j, (x) => { x.target = cyc(SEQ_TARGETS, x.target); }), { flex: 1.15, small: true })
+            : btn('No target', false, null, { kind: 'value', flex: 1.15, small: true }),
+          btn(FEED_TXT[b.feed || 'normal'], b.feed && b.feed !== 'normal', edit(j, (x) => { x.feed = cyc(FEED_VARIANTS, x.feed || 'normal'); }), { flex: 1.1, small: true }),
+          btn('–', false, edit(j, (x) => { x.n = x.n > 10 ? x.n - 5 : x.n - 1; }), { flex: 0.36 }),
+          btn(String(b.n), false, null, { kind: 'value', flex: 0.45 }),
+          btn('+', false, edit(j, (x) => { x.n = x.n >= 10 ? x.n + 5 : x.n + 1; }), { flex: 0.36 }),
+          B.length > 1 ? btn('✕', false, () => { SQ().blocks.splice(j, 1); save(); seqRestart(); }, { flex: 0.36, small: true })
+            : btn('', false, null, { kind: 'value', flex: 0.36 })];
+        // shown 6 blocks at a time; the page follows the block under way unless paged by hand
+        const PER = 6, pages = Math.ceil(B.length / PER);
+        if (G.seqPage === undefined || G.seqPageFor !== q.i) { G.seqPage = Math.floor(Math.min(q.i, B.length - 1) / PER); G.seqPageFor = q.i; }
+        G.seqPage = Math.max(0, Math.min(pages - 1, G.seqPage));
+        const p0 = G.seqPage * PER, shown = B.slice(p0, p0 + PER);
+        lines.push(...shown.map((b, k) => blockLine(b, p0 + k)));
+        if (pages > 1) lines.push([
+          btn('◀', false, G.seqPage > 0 ? () => { G.seqPage--; } : null, { flex: 0.5 }),
+          btn(`blocks ${p0 + 1}–${p0 + shown.length} of ${B.length}  ·  page ${G.seqPage + 1} / ${pages}`, false, null, { kind: 'value', flex: 4.2, small: true }),
+          btn('▶', false, G.seqPage < pages - 1 ? () => { G.seqPage++; } : null, { flex: 0.5 })]);
+        lines.push([
+          btn('Add block', false, B.length < SEQ_MAX ? () => { SQ().blocks.push(Object.assign({}, B[B.length - 1])); G.seqPage = Math.floor((B.length - 1) / PER); G.seqPageFor = q.i; save(); } : null, { flex: 1, small: true }),
+          btn(`Back to the default ${prog === 'custom' ? 'sequence' : 'drill'}`, false, () => { S[seqKey()] = seqDef()(); G.seqPage = undefined; save(); seqRestart(); }, { flex: 1.6, small: true })]);
+        // scoring: near-miss distances for the nicks (height on the side wall, or a floor bounce's distance from the
+        // wall), the drive ratings for straight drives
+        if (B.some(b => blockTarget(b) === 'cross' || blockTarget(b) === 'straight')) {
+          lines.push([['near3', '3 points within'], ['near2', '2 points within'], ['near1', '1 point within']].flatMap(([k, cap]) => {
+            const setN = (d) => () => { const o = Object.assign({}, S.nickPts); o[k] = Math.max(0, Math.round((o[k] + d) * 20) / 20);
+              S.nickPts = nickPtsValid(o); save(); };
+            return [btn('–', false, setN(-0.05), { flex: 0.36 }), btn(`${cmTxt(S.nickPts[k])} cm`, false, null, { kind: 'value', flex: 0.95, cap }),
+              btn('+', false, setN(0.05), { flex: 0.36 })];
+          }));
+        }
+        if (B.some(b => blockTarget(b) === 'drive')) lines.push([btn('Straight drives: 3 points for a drive of 85+, 2 for 70+, 1 for 50+ (length, tight to the wall, late side-wall touch)',
+          false, null, { kind: 'value', small: true, info: true })]);
+      }
+      seqRows.push({ label: `${PROG_NAME[prog]}  ·  ${status}`, lines });
     }
-    rows = [tabs,
-      ...(seqMode ? [] : [{ label: 'Drill', lines: [
-        [D('free', 'Free play'), D('lob', 'Lob serve'), D('hard', 'Hard serve'), D('volley', 'Volley feed')],
-        [D('loose', 'Loose ball'), D('boast', 'Boast feed'), D('drive', 'Boast practice'), D('rail', 'Drive practice')]] }]),
-      feedSide,
-      ...seqRows,
-      ...(!seqMode && TARGET_DRILLS[S.drill] ? [{ label: `Target for ${DRILLS[S.drill].short.toLowerCase()}`, lines: [['cross', 'straight'], ['boast', 'drive', 'off']].map(ks => ks.map(k =>
-        btn({ cross: 'Crosscourt nick', straight: 'Straight nick', boast: 'Boast', drive: 'Deep drive', off: 'Off' }[k], S.targets[S.drill] === k, () => {
-          S.targets[S.drill] = k; G.nk.target = null; G.nk.shot = null; G.nk.impact = null; save(); refreshHud(); }, k === 'off' ? { flex: 0.6 } : undefined))) }] : []),
+    // the solo drills, smaller: one drill at a time (feed side and target below it), and the custom sequence
+    const so = { small: true, h: 58 };
+    const soloBtn = (k, label) => btn(label, prog === 'solo' && S.drill === k, () => pickSolo(k), so);
+    const soloRows = [{ label: 'Solo drills', minor: true, lines: [
+      [soloBtn('free', 'Free play'), soloBtn('lob', 'Lob serve'), soloBtn('hard', 'Hard serve')],
+      [soloBtn('volley', 'Volley feed'), soloBtn('loose', 'Loose ball'), soloBtn('boast', 'Boast feed')],
+      [soloBtn('drive', 'Boast practice'), soloBtn('rail', 'Drive practice'), btn(PROG_NAME.custom, prog === 'custom', () => pickProg('custom'), so)]] }];
+    if (prog === 'solo' && S.drill !== 'free') soloRows.push({ label: 'Feed side', minor: true, items: [
+      btn('Forehand', S.side === 'fh', () => { S.side = 'fh'; save(); setDrill(S.drill); }, so),
+      btn('Backhand', S.side === 'bh', () => { S.side = 'bh'; save(); setDrill(S.drill); }, so),
+      btn('Both sides', S.side === 'alt', () => { S.side = 'alt'; save(); setDrill(S.drill); }, so)] });
+    if (prog === 'solo' && TARGET_DRILLS[S.drill]) soloRows.push({ label: `Target for ${DRILLS[S.drill].short.toLowerCase()}`, minor: true,
+      lines: [['cross', 'straight'], ['boast', 'drive', 'off']].map(ks => ks.map(k =>
+        btn({ cross: 'Crosscourt nick', straight: 'Straight nick', boast: 'Boast', drive: 'Straight drive', off: 'Off' }[k], S.targets[S.drill] === k, () => {
+          S.targets[S.drill] = k; G.nk.target = null; G.nk.shot = null; G.nk.impact = null; save(); refreshHud(); }, k === 'off' ? Object.assign({ flex: 0.6 }, so) : so))) });
+    // editing the blocks: just the sequence (the page would get too tall to read without looking down)
+    if (seqMode && G.seqEdit) rows = [tabs, ...mainRows, ...seqRows, bottom];
+    else rows = [tabs, ...mainRows, ...(prog === 'nick' || prog === 'length' ? seqRows : []), ...soloRows, ...(prog === 'custom' ? seqRows : []),
       { label: 'Time between feeds  ·  position', items: [
         btn('–', false, () => { S.gap = Math.max(0.5, S.gap - 0.5); save(); }, { flex: 0.6 }),
         btn(`${S.gap.toFixed(1)} s`, false, null, { kind: 'value', flex: 0.9 }),
@@ -4496,6 +4636,29 @@ function buildMenu() {
         btn('Back left', false, () => placePlayer(-1.7, 8.3)),
         btn('Back right', false, () => placePlayer(1.7, 8.3)),
         btn(S.autoReturn ? 'Auto ball return: on' : 'Auto ball return: off', S.autoReturn, () => { S.autoReturn = !S.autoReturn; save(); }, { flex: 1.8, small: true })] },
+      bottom];
+  } else if (page === 'history') {
+    // the last 10 completed sequences, newest first; tap one for its breakdown (per shot, per kind of feed)
+    const sel = HIST.length ? HIST[Math.max(0, Math.min(G.histSel || 0, HIST.length - 1))] : null;
+    const best = {}, count = {};
+    for (const e of HIST) { const pc = pctOf(e.tot, e.max); best[e.prog] = Math.max(best[e.prog] === undefined ? -1 : best[e.prog], pc); count[e.prog] = (count[e.prog] || 0) + 1; }
+    const histLine = (e, i) => {
+      const pc = pctOf(e.tot, e.max), star = count[e.prog] > 1 && pc === best[e.prog] ? '  ★' : '';
+      return [btn(`${PROG_NAME[e.prog]}${star}`, e === sel, () => { G.histSel = i; }, { cap: whenTxt(e.t), flex: 2.0 }),
+        btn(`${e.tot} / ${e.max}`, false, null, { kind: 'value', cap: 'points', flex: 1.1 }),
+        btn(`${pc} %`, false, null, { kind: 'value', cap: 'score', flex: 0.75 }),
+        btn(`${e.n3}  ·  ${e.n2}  ·  ${e.n1}`, false, null, { kind: 'value', cap: '× 3   ·   × 2   ·   × 1', flex: 1.25 })];
+    };
+    const chunk = (a, n) => { const out = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out; };
+    const cellOf = ([k, p, m]) => btn(m ? `${pctOf(p, m)} %` : '–', false, null, { kind: 'value', cap: `${k}  ·  ${p} / ${m}` });
+    rows = [tabs,
+      { label: HIST.length ? `Last ${HIST.length} completed drill${HIST.length > 1 ? 's' : ''}  ·  newest first${Object.values(count).some(c => c > 1) ? '  ·  ★ best' : ''}` : 'Completed drills',
+        lines: HIST.length ? HIST.map(histLine)
+          : [[btn('Nothing yet: finish a Nick shot or Straight length drill and its score is kept here (the last 10)', false, null, { kind: 'value', small: true, info: true })]] },
+      ...(sel ? [{ label: `Details  ·  ${whenTxt(sel.t)}  ·  ${PROG_NAME[sel.prog]}`, lines: [
+        ...chunk((sel.groups || []).map(cellOf), 4),
+        ...chunk((sel.feeds || []).filter(f => f[2] > 0).map(cellOf), 3),
+        [btn(`${(BALL_TYPES[sel.ball] || { name: 'Ball' }).name} at ${sel.temp} °C  ·  small variation ${sel.vary ? 'on' : 'off'}  ·  ${sel.shots} shots`, false, null, { kind: 'value', small: true, info: true })]] }] : []),
       bottom];
   } else if (page === 'ball') {
     const cell = (sp) => {
@@ -5054,7 +5217,7 @@ function gameStep(dt) {
   // ---- free play: auto return ----
   if (G.replay && G.over && G.time - G.overT > 1.4) endReplay();
   if (drillNow() === 'free' && G.ball === 'play' && G.over && S.autoReturn && G.time - G.overT > 2.2) recallBall();
-  // ---- Alternate sequence: next block, final score ----
+  // ---- sequence: next block, final score ----
   if (seqOn() && !G.replay) seqTick();
   // ---- drills: feeding ----
   if (drillNow() !== 'free' && !G.replay) {
@@ -5151,7 +5314,7 @@ async function boot() {
   if (ok) { ui.btn.disabled = false; ui.status.textContent = 'Headset ready. Put it on and press Enter VR.'; }
   else {
     ui.btn.disabled = true;
-    ui.status.textContent = inFrame ? 'VR can’t start inside this embedded preview. Open the standalone squash-vr file in the Meta Quest Browser to play.' : 'No VR headset detected. Open this page in the Meta Quest Browser on your Quest 2.';
+    ui.status.textContent = inFrame ? 'VR can’t start inside this embedded preview. Open the standalone squash-vr file in the Meta Quest Browser to play.' : 'No VR headset detected. Open this page in the Meta Quest Browser on your headset.';
   }
 }
 boot();
@@ -5159,7 +5322,8 @@ configureFeeds();
 if (drillNow() !== 'free') { G.nextFeedAt = Infinity; }
 window.__squash = { nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
   toggleMenu, TUNE_SPEC, setTune, resetTune, dropTest, dropDemo, testShot, replayLastHit, endReplay, onSolverMsgs: () => solverLog, RR, applyFrameRate,
-  seqRestart, seqTotals, seqLine, seqDefault, seqPlusDefault, nickPtsValid, nickPoints, drillNow, sideNow };
+  seqRestart, seqTotals, seqLine, seqDefault, seqPlusDefault, seqLenDefault, nickPtsValid, nickPoints, drillNow, sideNow,
+  pickProg, pickSolo, HIST, whenTxt, PROG_NAME };
 
 })();
 </script>
