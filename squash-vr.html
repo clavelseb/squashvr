@@ -102,7 +102,7 @@
         <li><strong>Nick shot drill</strong></li><li><strong>Straight length drill</strong></li><li>Free play</li><li>Lob serve</li><li>Hard serve</li><li>Volley feed</li><li>Loose ball</li><li>Boast feed</li><li>Boast practice</li><li>Drive practice</li><li>Custom sequence</li>
       </ul>
       <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the straight-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each solo drill can be set to crosscourt nick, straight nick, boast, straight drive or no target.</p>
-      <p class="lede" style="margin-top:10px">The two <strong>main drills</strong> run a sequence of blocks off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. You are placed once at the start of each block, the feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The <strong>Custom sequence</strong>, among the solo drills, is a sequence of your own. The <strong>History</strong> tab keeps the last 10 drills played to the end, with their breakdown by shot and by kind of feed.</p>
+      <p class="lede" style="margin-top:10px">The two <strong>main drills</strong> run a sequence of blocks off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. You are placed once at the start of each block, the feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The menu opens on the main drills, with the <strong>history</strong> under them: the last 10 drills played to the end, with the score, the average speed of your shots and the breakdown by shot and by kind of feed. The solo drills, the <strong>Custom sequence</strong> (a sequence of your own), the ball and the other options are on the <strong>Solo &amp; options</strong> tab.</p>
     </section>
     <section aria-labelledby="ph">
       <h2 id="ph">Ball &amp; racquet physics</h2>
@@ -3056,11 +3056,12 @@ class MenuPanel {
         ctx.fillText(b.text, b.x + b.w / 2, b.y + b.h * 0.40, b.w - 24);
         ctx.fillStyle = b.active ? 'rgba(255,255,255,0.88)' : 'rgba(190,200,215,0.85)'; ctx.font = `500 23px ${FONT}`;
         ctx.fillText(b.sub || '', b.x + b.w / 2, b.y + b.h * 0.74, b.w - 24);
-      } else if (b.cap) {   // value cell with a caption above the value (ball tuning page); changed values in amber
-        ctx.fillStyle = 'rgba(190,200,215,0.78)'; ctx.font = `500 19px ${FONT}`;
-        ctx.fillText(b.cap, b.x + b.w / 2, b.y + 19, b.w - 10);
-        ctx.fillStyle = b.mod ? '#ffc46b' : '#ffffff'; ctx.font = `700 26px ${FONT}`;
-        ctx.fillText(b.text, b.x + b.w / 2, b.y + 47, b.w - 10);
+      } else if (b.cap) {   // a caption above the value (ball tuning page, history); changed values in amber
+        const low = b.h < 66;
+        ctx.fillStyle = b.active ? 'rgba(255,255,255,0.85)' : 'rgba(190,200,215,0.78)'; ctx.font = `500 ${low ? 17 : 19}px ${FONT}`;
+        ctx.fillText(b.cap, b.x + b.w / 2, b.y + b.h * 0.27, b.w - 10);
+        ctx.fillStyle = b.mod ? '#ffc46b' : '#ffffff'; ctx.font = `700 ${low ? 23 : 26}px ${FONT}`;
+        ctx.fillText(b.text, b.x + b.w / 2, b.y + b.h * 0.67, b.w - 10);
       } else if (b.info) {   // information line (refresh rate check): lighter, blue-ish, squeezed to fit
         ctx.fillStyle = 'rgba(190,225,255,0.92)'; ctx.font = `500 23px ${FONT}`;
         ctx.fillText(b.text, b.x + b.w / 2, b.y + b.h / 2 + 1, b.w - 24);
@@ -3198,7 +3199,7 @@ function tinSignCanvas(wallW, tinH) {
 
 
 
-const VERSION = '1.20.2';
+const VERSION = '1.21';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -3435,7 +3436,8 @@ const G = {
   turnLatch: false, lastHapticT: 0,
   placeNext: false,          // place the player at the next stance the solver sends (a new drill, side or block)
   sq: { i: 0, shot: 0, recs: [], done: false, nextAt: 0, shown: false },   // sequence: block, shots done in it, every shot's points
-  seqEdit: false, seqPage: undefined, seqPageFor: -1, histSel: 0,             // menu: block editor open, its page; History row shown
+  seqEdit: false, seqPage: undefined, seqPageFor: -1, histSel: -1,            // menu: block editor open, its page; history row opened
+  rallySp: 0,                // speed of the rally's first hit (m/s)
 };
 
 const worldFromRef = M4.create(), refFromWorld = M4.create();
@@ -3559,7 +3561,9 @@ function pickProg(p) {
   if (S.prog === p) return;
   S.prog = p; G.seqPage = undefined; G.seqEdit = false; save(); seqRestart();
 }
-function pickSolo(k) { S.prog = 'solo'; setDrill(k); }
+function pickSolo(k) { S.prog = 'solo'; setDrill(k); showMain(idleTitle(), '#ffffff'); refreshHud(); }
+// the scoreboard's big line when nothing has happened yet (the game's name is on the tin since v1.20.2)
+const idleTitle = () => (seqOn() ? PROG_NAME[S.prog] : S.drill === 'free' ? 'Ready' : DRILLS[S.drill].short);
 function setDrill(k) {
   S.drill = k; save();
   G.hit = null; G.over = false; G.nick = null;
@@ -3659,15 +3663,17 @@ function seqScore(sh, pts) {
   if (sh.seqRec) { sh.seqRec.pts = pts; sh.seqRec = null; }
 }
 const ptsTxt = (p) => `+${p} point${p === 1 ? '' : 's'}`;
-function seqTotals() {
-  const q = G.sq, per = SQ().blocks.map(() => ({ p: 0, m: 0 }));
-  let tot = 0, max = 0, n3 = 0, n2 = 0, n1 = 0;
+function seqTotals() {   // points, and the shots' average speed (km/h) over the shots hit
+  const q = G.sq, per = SQ().blocks.map(() => ({ p: 0, m: 0, sp: 0, ns: 0 }));
+  let tot = 0, max = 0, n3 = 0, n2 = 0, n1 = 0, sp = 0, ns = 0;
   for (const r of q.recs) {
-    if (r.pts === -1 || !per[r.i]) continue;          // -1: a block with no target
+    if (!per[r.i]) continue;
+    if (r.sp > 0) { per[r.i].sp += r.sp; per[r.i].ns++; sp += r.sp; ns++; }
+    if (r.pts === -1) continue;                         // -1: a block with no target
     const p = r.pts || 0; tot += p; max += 3; per[r.i].p += p; per[r.i].m += 3;
     if (p === 3) n3++; else if (p === 2) n2++; else if (p === 1) n1++;
   }
-  return { tot, max, n3, n2, n1, per };
+  return { tot, max, n3, n2, n1, per, kmh: ns ? Math.round(sp / ns * 3.6) : 0 };
 }
 function seqLine() {
   const q = G.sq, B = SQ().blocks, b = seqBlock(), t = seqTotals();
@@ -3684,7 +3690,7 @@ function seqRestart() {
 function seqRallyEnd() {
   const q = G.sq; if (q.done || q.nextAt) return;
   const b = seqBlock(), scored = targetMode() !== 'off', sh = G.nk.shot;
-  const rec = { i: q.i, pts: scored ? null : -1, t: G.time };
+  const rec = { i: q.i, pts: scored ? null : -1, t: G.time, sp: G.hit && G.rallySp > 0 ? G.rallySp : 0 };   // sp: shot speed, m/s
   q.recs.push(rec); q.shot++;
   if (scored) {
     if (sh && G.hit && sh.id === G.nk.id) { if (sh.seqPts !== undefined) rec.pts = sh.seqPts; else sh.seqRec = rec; }
@@ -3704,7 +3710,7 @@ function seqTick() {
     setDrill(S.drill);                                  // the next block's drill, side and target; places the player
     showMain(`Block ${q.i + 1} of ${SQ().blocks.length}`, '#9fd3ff');
     board.set(undefined, undefined, blockName(seqBlock()), seqLine(), undefined,
-      `${blockName(prev, true)}: ${done.m ? `${done.p} / ${done.m} points` : 'done'}`);
+      `${blockName(prev, true)}: ${done.m ? `${done.p} / ${done.m} points` : 'done'}${done.ns ? ` · ${Math.round(done.sp / done.ns * 3.6)} km/h average` : ''}`);
   }
   if (q.done && !q.shown && q.recs.every(r => r.pts !== null)) { q.shown = true; seqSummary(); }
 }
@@ -3716,7 +3722,7 @@ function seqSummary() {
   const allDrive = B.every(b => blockTarget(b) === 'drive');
   const legend = allDrive ? '3 = drive 85+ (great)  ·  2 = drive 70+ (good)  ·  1 = drive 50+'
     : `3 = nick or within ${cmTxt(np.near3)} cm (tight boast, great drive) · 2 = within ${cmTxt(np.near2)} cm · 1 = within ${cmTxt(np.near1)} cm`;
-  board.set(undefined, undefined, t.max ? `points (${Math.round(100 * t.tot / t.max)} %) · ${t.n3} × 3 · ${t.n2} × 2 · ${t.n1} × 1` : 'no shots at a target',
+  board.set(undefined, undefined, t.max ? `points (${Math.round(100 * t.tot / t.max)} %) · ${t.n3} × 3 · ${t.n2} × 2 · ${t.n1} × 1${t.kmh ? ` · ${t.kmh} km/h average` : ''}` : 'no shots at a target',
     `${PROG_NAME[S.prog]} done${saved ? ' · saved in History' : ''} · ${btnName(false, 4)}: start again`, undefined,
     ...(B.length <= 6 ? [B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('   ·   '), t.max ? legend : '']
       // a long sequence (the main drills): totals per shot, then per kind of feed
@@ -3724,10 +3730,10 @@ function seqSummary() {
 }
 const groupKey = (b) => blockName(b, true, true);                                    // BH cross, FH drive...
 const feedKey = (b) => FEED_TXT[b.feed || 'normal'].replace(' feed', '').toLowerCase();   // normal, wider, far behind...
-function groupTotals(B, t, key) {   // [[name, points, max], ...] in the order met
+function groupTotals(B, t, key) {   // [[name, points, max, average km/h], ...] in the order met
   const g = new Map();
-  B.forEach((b, i) => { const k = key(b), o = g.get(k) || [k, 0, 0]; o[1] += t.per[i].p; o[2] += t.per[i].m; g.set(k, o); });
-  return [...g.values()];
+  B.forEach((b, i) => { const k = key(b), o = g.get(k) || [k, 0, 0, 0, 0], pr = t.per[i]; o[1] += pr.p; o[2] += pr.m; o[3] += pr.sp; o[4] += pr.ns; g.set(k, o); });
+  return [...g.values()].map(([k, p, m, sp, ns]) => [k, p, m, ns ? Math.round(sp / ns * 3.6) : 0]);
 }
 const groupLine = (G2) => G2.map(([k, p, m]) => `${k} ${m ? `${p}/${m}` : '–'}`).join('  ·  ');
 
@@ -3743,10 +3749,10 @@ const HIST = (() => {
 function saveHist() { try { localStorage.setItem(HIST_KEY, JSON.stringify(HIST)); } catch (e) { /* storage unavailable */ } }
 function recordHistory(t, B) {
   if (!t.max) return false;
-  HIST.unshift({ t: Date.now(), prog: S.prog, tot: t.tot, max: t.max, n3: t.n3, n2: t.n2, n1: t.n1, shots: G.sq.recs.length,
+  HIST.unshift({ t: Date.now(), prog: S.prog, tot: t.tot, max: t.max, n3: t.n3, n2: t.n2, n1: t.n1, kmh: t.kmh, shots: G.sq.recs.length,
     groups: groupTotals(B, t, groupKey), feeds: groupTotals(B, t, feedKey), ball: S.ball, temp: WARM_T[S.temp] || Math.round(phys.T), vary: !!SQ().vary });
   if (HIST.length > HIST_MAX) HIST.length = HIST_MAX;
-  G.histSel = 0; saveHist();
+  G.histSel = -1; saveHist();
   return true;
 }
 const pctOf = (p, m) => (m ? Math.round(100 * p / m) : 0);
@@ -4134,7 +4140,7 @@ function btnName(racquetHand, i) {
   if (i === 4) return h === 'right' ? 'A' : 'X';
   return h === 'right' ? 'B' : 'Y';
 }
-showMain('Squash Trainer', '#ffffff'); refreshHud();
+showMain(idleTitle(), '#ffffff'); refreshHud();
 
 // ---------------------------------------------------------------- physics events -> rules, sound, haptics
 const OUT_SIDE = (z) => COURT.FRONT_OUT - (COURT.FRONT_OUT - COURT.BACK_OUT) * z / COURT.L;
@@ -4226,6 +4232,7 @@ function onRacquetEnd(info) {
   if (S.showSpeed) showMain(`${Math.round(info.speed * 3.6)} km/h${info.assisted ? ' (assist)' : ''}`, info.frame ? '#ffb347' : info.assisted ? '#bfe3ff' : '#ffffff');
   if (info.assisted) G.stats.assisted = (G.stats.assisted || 0) + 1;
   if (G.ball !== 'play') { G.ball = 'play'; }
+  if (!G.hit) G.rallySp = info.speed;          // the rally's first hit: its speed for the sequence averages
   G.hit = { t: G.time }; G.front = false; G.bounces = 0; G.over = false; G.nick = null; G.liveT = G.time;
   refreshHud();
 }
@@ -4517,10 +4524,11 @@ function buildMenu() {
     const offered = RR.list.length ? `Browser offers ${RR.list.map(rrRound).join(', ')} Hz` : 'Browser does not list its rates';
     return ev && G.real - ev.t < 180 ? ev.text : `${offered}${BROWSER_VER ? ' (Browser ' + BROWSER_VER.split('.').slice(0, 2).join('.') + ')' : ''}`;
   })();
+  if (G.menuPage === 'history') G.menuPage = 'practice';   // v1.20's History tab is now under the main drills
   const page = G.menuPage;
   const tabs = { items: [
-    btn('Practice', page === 'practice', () => { G.menuPage = 'practice'; }, { kind: 'tab' }),
-    btn('History', page === 'history', () => { G.menuPage = 'history'; }, { kind: 'tab', flex: 0.9 }),
+    btn('Main drills', page === 'practice', () => { G.menuPage = 'practice'; }, { kind: 'tab', flex: 1.2 }),
+    btn('Solo & options', page === 'solo', () => { G.menuPage = 'solo'; }, { kind: 'tab', flex: 1.3 }),
     btn('Racquet & settings', page === 'racquet', () => { G.menuPage = 'racquet'; }, { kind: 'tab', flex: 1.4 }),
     btn('Ball physics', page === 'ball', () => { G.menuPage = 'ball'; }, { kind: 'tab', flex: 1.1 })] };
   const bottom = { items: [
@@ -4532,93 +4540,120 @@ function buildMenu() {
     btn('Exit VR', false, () => { if (xr.session) xr.session.end(); }),
     btn('Resume', true, () => toggleMenu(), { kind: 'primary', flex: 1.4 })] };
   const setTemp = (t) => () => { S.temp = t; if (t === 'cold') applyBall.didCold = false; save(); applyBall(); setDrill(S.drill); refreshHud(); };
+  const prog = S.prog, seqMode = seqOn();
+  const seqStatus = () => {
+    const q = G.sq, B = SQ().blocks, t = seqTotals(), cb = seqBlock();
+    return q.done ? `done: ${t.tot} / ${t.max} points` : `block ${q.i + 1} of ${B.length}, shot ${Math.min(q.shot + 1, cb.n)} of ${cb.n} · ${t.tot} points`;
+  };
+  // a sequence under way (a main drill on Main drills, the custom sequence on Solo & options): where it is, restart,
+  // small variation, and the block editor (closed unless asked for)
+  const seqRows = () => {
+    const q = G.sq, SEQ = SQ(), B = SEQ.blocks, t = seqTotals(), cb = seqBlock();
+    const now = q.done ? (t.max ? `Done: ${t.tot} / ${t.max} points (${pctOf(t.tot, t.max)} %), kept in the history` : 'Done')
+      : `Now: ${blockName(cb)}${q.nextAt ? '  ·  next block coming' : ''}`;
+    const lines = [
+      [btn(now, false, null, { kind: 'value', small: true, flex: 3.3 }), btn('Restart', false, () => seqRestart(), { flex: 1 })],
+      [btn(SEQ.vary ? 'Small variation: on' : 'Small variation: off', SEQ.vary, () => { SQ().vary = !SQ().vary; save(); setDrill(S.drill); }, { flex: 1.6, small: true }),
+        btn(G.seqEdit ? 'Hide the blocks' : `Edit the blocks (${B.length})`, G.seqEdit, () => { G.seqEdit = !G.seqEdit; }, { flex: 1.6, small: true })]];
+    if (G.seqEdit) {
+      const cyc = (arr, v) => arr[(arr.indexOf(v) + 1) % arr.length];
+      // editing the block under way re-solves its feeds (and places the player again); the others take effect when reached
+      const edit = (j, fn) => () => {
+        fn(B[j]); S[seqKey()] = seqValid(SEQ, seqDef()); save();
+        if (j === G.sq.i && !G.sq.done) { if (G.sq.shot >= SQ().blocks[j].n && !G.sq.nextAt) G.sq.nextAt = G.time + 0.5; setDrill(S.drill); }
+      };
+      const TG = { cross: 'Cross nick', straight: 'Straight nick', boast: 'Boast', drive: 'Straight drive', off: 'No target' };
+      // each block: drill, side, target, feed (normal / wider / behind you / far behind / faster / even faster), shots, remove
+      const blockLine = (b, j) => [
+        btn(DRILLS[b.drill].short, j === q.i && !q.done, edit(j, (x) => { x.drill = cyc(SEQ_DRILLS, x.drill); }), { flex: 1.25, small: true }),
+        btn({ fh: 'Forehand', bh: 'Backhand', alt: 'Both sides' }[b.side], false, edit(j, (x) => { x.side = cyc(SEQ_SIDES, x.side); }), { flex: 1.0, small: true }),
+        TARGET_DRILLS[b.drill] ? btn(TG[b.target], false, edit(j, (x) => { x.target = cyc(SEQ_TARGETS, x.target); }), { flex: 1.15, small: true })
+          : btn('No target', false, null, { kind: 'value', flex: 1.15, small: true }),
+        btn(FEED_TXT[b.feed || 'normal'], b.feed && b.feed !== 'normal', edit(j, (x) => { x.feed = cyc(FEED_VARIANTS, x.feed || 'normal'); }), { flex: 1.1, small: true }),
+        btn('–', false, edit(j, (x) => { x.n = x.n > 10 ? x.n - 5 : x.n - 1; }), { flex: 0.36 }),
+        btn(String(b.n), false, null, { kind: 'value', flex: 0.45 }),
+        btn('+', false, edit(j, (x) => { x.n = x.n >= 10 ? x.n + 5 : x.n + 1; }), { flex: 0.36 }),
+        B.length > 1 ? btn('✕', false, () => { SQ().blocks.splice(j, 1); save(); seqRestart(); }, { flex: 0.36, small: true })
+          : btn('', false, null, { kind: 'value', flex: 0.36 })];
+      // shown 6 blocks at a time; the page follows the block under way unless paged by hand
+      const PER = 6, pages = Math.ceil(B.length / PER);
+      if (G.seqPage === undefined || G.seqPageFor !== q.i) { G.seqPage = Math.floor(Math.min(q.i, B.length - 1) / PER); G.seqPageFor = q.i; }
+      G.seqPage = Math.max(0, Math.min(pages - 1, G.seqPage));
+      const p0 = G.seqPage * PER, shown = B.slice(p0, p0 + PER);
+      lines.push(...shown.map((b, k) => blockLine(b, p0 + k)));
+      if (pages > 1) lines.push([
+        btn('◀', false, G.seqPage > 0 ? () => { G.seqPage--; } : null, { flex: 0.5 }),
+        btn(`blocks ${p0 + 1}–${p0 + shown.length} of ${B.length}  ·  page ${G.seqPage + 1} / ${pages}`, false, null, { kind: 'value', flex: 4.2, small: true }),
+        btn('▶', false, G.seqPage < pages - 1 ? () => { G.seqPage++; } : null, { flex: 0.5 })]);
+      lines.push([
+        btn('Add block', false, B.length < SEQ_MAX ? () => { SQ().blocks.push(Object.assign({}, B[B.length - 1])); G.seqPage = Math.floor((B.length - 1) / PER); G.seqPageFor = q.i; save(); } : null, { flex: 1, small: true }),
+        btn(`Back to the default ${prog === 'custom' ? 'sequence' : 'drill'}`, false, () => { S[seqKey()] = seqDef()(); G.seqPage = undefined; save(); seqRestart(); }, { flex: 1.6, small: true })]);
+      // scoring: near-miss distances for the nicks (height on the side wall, or a floor bounce's distance from the
+      // wall), the drive ratings for straight drives
+      if (B.some(b => blockTarget(b) === 'cross' || blockTarget(b) === 'straight')) {
+        lines.push([['near3', '3 points within'], ['near2', '2 points within'], ['near1', '1 point within']].flatMap(([k, cap]) => {
+          const setN = (d) => () => { const o = Object.assign({}, S.nickPts); o[k] = Math.max(0, Math.round((o[k] + d) * 20) / 20);
+            S.nickPts = nickPtsValid(o); save(); };
+          return [btn('–', false, setN(-0.05), { flex: 0.36 }), btn(`${cmTxt(S.nickPts[k])} cm`, false, null, { kind: 'value', flex: 0.95, cap }),
+            btn('+', false, setN(0.05), { flex: 0.36 })];
+        }));
+      }
+      if (B.some(b => blockTarget(b) === 'drive')) lines.push([btn('Straight drives: 3 points for a drive of 85+, 2 for 70+, 1 for 50+ (length, tight to the wall, late side-wall touch)',
+        false, null, { kind: 'value', small: true, info: true })]);
+    }
+    return [{ label: `${PROG_NAME[prog]}  ·  ${seqStatus()}`, lines }];
+  };
+  // the completed drills, newest first, one line each (when, points, score, average shot speed, how many 3s, 2s
+  // and 1s); tap one for its breakdown under it, per shot and per kind of feed
+  const historyRows = () => {
+    if (!HIST.length) return [{ label: 'History', lines: [[btn('Nothing yet: finish a main drill and its score is kept here (the last 10)', false, null, { kind: 'value', small: true, info: true })]] }];
+    const best = {}, count = {};
+    for (const e of HIST) { const pc = pctOf(e.tot, e.max); best[e.prog] = Math.max(best[e.prog] === undefined ? -1 : best[e.prog], pc); count[e.prog] = (count[e.prog] || 0) + 1; }
+    const chunk = (a, n) => { const out = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out; };
+    const cellOf = ([k, p, m, kmh]) => btn(m ? `${pctOf(p, m)} %${kmh ? `  ·  ${kmh} km/h` : ''}` : '–', false, null, { kind: 'value', cap: `${k}  ·  ${p} / ${m}`, h: 60 });
+    const lines = [];
+    HIST.forEach((e, i) => {
+      const pc = pctOf(e.tot, e.max), star = count[e.prog] > 1 && pc === best[e.prog] ? '  ★' : '', open = i === G.histSel;
+      lines.push([btn(`${PROG_NAME[e.prog]}${star}`, open, () => { G.histSel = open ? -1 : i; }, { cap: whenTxt(e.t), flex: 2.0, h: 60 }),
+        btn(`${e.tot} / ${e.max}`, false, null, { kind: 'value', cap: 'points', flex: 1.05, h: 60 }),
+        btn(`${pc} %`, false, null, { kind: 'value', cap: 'score', flex: 0.75, h: 60 }),
+        btn(e.kmh ? `${e.kmh} km/h` : '–', false, null, { kind: 'value', cap: 'average speed', flex: 1.0, h: 60 }),
+        btn(`${e.n3}  ·  ${e.n2}  ·  ${e.n1}`, false, null, { kind: 'value', cap: '× 3   ·   × 2   ·   × 1', flex: 1.2, h: 60 })]);
+      if (open) lines.push(...chunk((e.groups || []).map(cellOf), 4), ...chunk((e.feeds || []).filter(f => f[2] > 0).map(cellOf), 3),
+        [btn(`${(BALL_TYPES[e.ball] || { name: 'Ball' }).name} at ${e.temp} °C  ·  small variation ${e.vary ? 'on' : 'off'}  ·  ${e.shots} shots`, false, null, { kind: 'value', small: true, info: true, h: 56 })]);
+    });
+    return [{ label: `History  ·  last ${HIST.length} completed  ·  tap one for details${Object.values(count).some(c => c > 1) ? '  ·  ★ best' : ''}`, lines }];
+  };
   let rows;
   if (page === 'practice') {
-    const prog = S.prog, seqMode = seqOn();
-    // the two main drills, big: how many shots, and the best score kept in the History
+    // the two main drills, big (how many shots, and the best score in the history), what is under way, the history
     const big = (p) => {
       const n = S[SEQ_KEY[p]].blocks.reduce((a, b) => a + b.n, 0), bp = bestPct(p);
       return btn(PROG_NAME[p], prog === p, () => pickProg(p), { kind: 'big', h: 112, sub: `${n} volleys${bp >= 0 ? `  ·  best ${bp} %` : ''}` });
     };
-    const mainRows = [{ label: 'Main drills', lines: [[big('nick'), big('length')]] }];
-    // a sequence under way (a main drill or the custom sequence): where it is, restart, small variation, and the
-    // block editor (closed unless asked for)
-    const seqRows = [];
-    if (seqMode) {
-      const q = G.sq, SEQ = SQ(), B = SEQ.blocks, t = seqTotals(), cb = seqBlock();
-      const status = q.done ? `done: ${t.tot} / ${t.max} points` : `block ${q.i + 1} of ${B.length}, shot ${Math.min(q.shot + 1, cb.n)} of ${cb.n} · ${t.tot} points`;
-      const now = q.done ? (t.max ? `Done: ${t.tot} / ${t.max} points (${pctOf(t.tot, t.max)} %), kept in History` : 'Done')
-        : `Now: ${blockName(cb)}${q.nextAt ? '  ·  next block coming' : ''}`;
-      const lines = [
-        [btn(now, false, null, { kind: 'value', small: true, flex: 3.3 }), btn('Restart', false, () => seqRestart(), { flex: 1 })],
-        [btn(SEQ.vary ? 'Small variation: on' : 'Small variation: off', SEQ.vary, () => { SQ().vary = !SQ().vary; save(); setDrill(S.drill); }, { flex: 1.6, small: true }),
-          btn(G.seqEdit ? 'Hide the blocks' : `Edit the blocks (${B.length})`, G.seqEdit, () => { G.seqEdit = !G.seqEdit; }, { flex: 1.6, small: true })]];
-      if (G.seqEdit) {
-        const cyc = (arr, v) => arr[(arr.indexOf(v) + 1) % arr.length];
-        // editing the block under way re-solves its feeds (and places the player again); the others take effect when reached
-        const edit = (j, fn) => () => {
-          fn(B[j]); S[seqKey()] = seqValid(SEQ, seqDef()); save();
-          if (j === G.sq.i && !G.sq.done) { if (G.sq.shot >= SQ().blocks[j].n && !G.sq.nextAt) G.sq.nextAt = G.time + 0.5; setDrill(S.drill); }
-        };
-        const TG = { cross: 'Cross nick', straight: 'Straight nick', boast: 'Boast', drive: 'Straight drive', off: 'No target' };
-        // each block: drill, side, target, feed (normal / wider / behind you / far behind / faster / even faster), shots, remove
-        const blockLine = (b, j) => [
-          btn(DRILLS[b.drill].short, j === q.i && !q.done, edit(j, (x) => { x.drill = cyc(SEQ_DRILLS, x.drill); }), { flex: 1.25, small: true }),
-          btn({ fh: 'Forehand', bh: 'Backhand', alt: 'Both sides' }[b.side], false, edit(j, (x) => { x.side = cyc(SEQ_SIDES, x.side); }), { flex: 1.0, small: true }),
-          TARGET_DRILLS[b.drill] ? btn(TG[b.target], false, edit(j, (x) => { x.target = cyc(SEQ_TARGETS, x.target); }), { flex: 1.15, small: true })
-            : btn('No target', false, null, { kind: 'value', flex: 1.15, small: true }),
-          btn(FEED_TXT[b.feed || 'normal'], b.feed && b.feed !== 'normal', edit(j, (x) => { x.feed = cyc(FEED_VARIANTS, x.feed || 'normal'); }), { flex: 1.1, small: true }),
-          btn('–', false, edit(j, (x) => { x.n = x.n > 10 ? x.n - 5 : x.n - 1; }), { flex: 0.36 }),
-          btn(String(b.n), false, null, { kind: 'value', flex: 0.45 }),
-          btn('+', false, edit(j, (x) => { x.n = x.n >= 10 ? x.n + 5 : x.n + 1; }), { flex: 0.36 }),
-          B.length > 1 ? btn('✕', false, () => { SQ().blocks.splice(j, 1); save(); seqRestart(); }, { flex: 0.36, small: true })
-            : btn('', false, null, { kind: 'value', flex: 0.36 })];
-        // shown 6 blocks at a time; the page follows the block under way unless paged by hand
-        const PER = 6, pages = Math.ceil(B.length / PER);
-        if (G.seqPage === undefined || G.seqPageFor !== q.i) { G.seqPage = Math.floor(Math.min(q.i, B.length - 1) / PER); G.seqPageFor = q.i; }
-        G.seqPage = Math.max(0, Math.min(pages - 1, G.seqPage));
-        const p0 = G.seqPage * PER, shown = B.slice(p0, p0 + PER);
-        lines.push(...shown.map((b, k) => blockLine(b, p0 + k)));
-        if (pages > 1) lines.push([
-          btn('◀', false, G.seqPage > 0 ? () => { G.seqPage--; } : null, { flex: 0.5 }),
-          btn(`blocks ${p0 + 1}–${p0 + shown.length} of ${B.length}  ·  page ${G.seqPage + 1} / ${pages}`, false, null, { kind: 'value', flex: 4.2, small: true }),
-          btn('▶', false, G.seqPage < pages - 1 ? () => { G.seqPage++; } : null, { flex: 0.5 })]);
-        lines.push([
-          btn('Add block', false, B.length < SEQ_MAX ? () => { SQ().blocks.push(Object.assign({}, B[B.length - 1])); G.seqPage = Math.floor((B.length - 1) / PER); G.seqPageFor = q.i; save(); } : null, { flex: 1, small: true }),
-          btn(`Back to the default ${prog === 'custom' ? 'sequence' : 'drill'}`, false, () => { S[seqKey()] = seqDef()(); G.seqPage = undefined; save(); seqRestart(); }, { flex: 1.6, small: true })]);
-        // scoring: near-miss distances for the nicks (height on the side wall, or a floor bounce's distance from the
-        // wall), the drive ratings for straight drives
-        if (B.some(b => blockTarget(b) === 'cross' || blockTarget(b) === 'straight')) {
-          lines.push([['near3', '3 points within'], ['near2', '2 points within'], ['near1', '1 point within']].flatMap(([k, cap]) => {
-            const setN = (d) => () => { const o = Object.assign({}, S.nickPts); o[k] = Math.max(0, Math.round((o[k] + d) * 20) / 20);
-              S.nickPts = nickPtsValid(o); save(); };
-            return [btn('–', false, setN(-0.05), { flex: 0.36 }), btn(`${cmTxt(S.nickPts[k])} cm`, false, null, { kind: 'value', flex: 0.95, cap }),
-              btn('+', false, setN(0.05), { flex: 0.36 })];
-          }));
-        }
-        if (B.some(b => blockTarget(b) === 'drive')) lines.push([btn('Straight drives: 3 points for a drive of 85+, 2 for 70+, 1 for 50+ (length, tight to the wall, late side-wall touch)',
-          false, null, { kind: 'value', small: true, info: true })]);
-      }
-      seqRows.push({ label: `${PROG_NAME[prog]}  ·  ${status}`, lines });
-    }
-    // the solo drills, smaller: one drill at a time (feed side and target below it), and the custom sequence
-    const so = { small: true, h: 58 };
-    const soloBtn = (k, label) => btn(label, prog === 'solo' && S.drill === k, () => pickSolo(k), so);
-    const soloRows = [{ label: 'Solo drills', minor: true, lines: [
+    const mainRows = [{ lines: [[big('nick'), big('length')]] }];
+    const soloNow = prog === 'custom' ? `${PROG_NAME.custom}  ·  ${seqStatus()}`
+      : `${DRILLS[S.drill].short}${S.drill === 'free' ? '' : `  ·  ${SIDE_TXT[S.side]}`}${nickMode() ? `  ·  ${TARGET_TXT[targetMode()]}` : ''}`;
+    const nowRows = prog === 'nick' || prog === 'length' ? seqRows()
+      : [{ label: 'Playing now', lines: [[btn(soloNow, false, null, { kind: 'value', small: true, flex: 3.2 }), btn('Solo & options', false, () => { G.menuPage = 'solo'; }, { flex: 1.2, small: true })]] }];
+    // editing the blocks: just the drill (with the history too, the page gets too tall to read without looking down)
+    rows = prog !== 'custom' && seqMode && G.seqEdit ? [tabs, ...mainRows, ...nowRows, bottom] : [tabs, ...mainRows, ...nowRows, ...historyRows(), bottom];
+  } else if (page === 'solo') {
+    // the solo drills (feed side and target below the one picked), the custom sequence, and the other options
+    const soloBtn = (k, label) => btn(label, prog === 'solo' && S.drill === k, () => pickSolo(k));
+    const soloRows = [{ label: 'Solo drills', lines: [
       [soloBtn('free', 'Free play'), soloBtn('lob', 'Lob serve'), soloBtn('hard', 'Hard serve')],
       [soloBtn('volley', 'Volley feed'), soloBtn('loose', 'Loose ball'), soloBtn('boast', 'Boast feed')],
-      [soloBtn('drive', 'Boast practice'), soloBtn('rail', 'Drive practice'), btn(PROG_NAME.custom, prog === 'custom', () => pickProg('custom'), so)]] }];
-    if (prog === 'solo' && S.drill !== 'free') soloRows.push({ label: 'Feed side', minor: true, items: [
-      btn('Forehand', S.side === 'fh', () => { S.side = 'fh'; save(); setDrill(S.drill); }, so),
-      btn('Backhand', S.side === 'bh', () => { S.side = 'bh'; save(); setDrill(S.drill); }, so),
-      btn('Both sides', S.side === 'alt', () => { S.side = 'alt'; save(); setDrill(S.drill); }, so)] });
-    if (prog === 'solo' && TARGET_DRILLS[S.drill]) soloRows.push({ label: `Target for ${DRILLS[S.drill].short.toLowerCase()}`, minor: true,
+      [soloBtn('drive', 'Boast practice'), soloBtn('rail', 'Drive practice'), btn(PROG_NAME.custom, prog === 'custom', () => pickProg('custom'))]] }];
+    if (prog === 'solo' && S.drill !== 'free') soloRows.push({ label: 'Feed side', items: [
+      btn('Forehand', S.side === 'fh', () => { S.side = 'fh'; save(); setDrill(S.drill); }),
+      btn('Backhand', S.side === 'bh', () => { S.side = 'bh'; save(); setDrill(S.drill); }),
+      btn('Both sides', S.side === 'alt', () => { S.side = 'alt'; save(); setDrill(S.drill); })] });
+    if (prog === 'solo' && TARGET_DRILLS[S.drill]) soloRows.push({ label: `Target for ${DRILLS[S.drill].short.toLowerCase()}`,
       lines: [['cross', 'straight'], ['boast', 'drive', 'off']].map(ks => ks.map(k =>
         btn({ cross: 'Crosscourt nick', straight: 'Straight nick', boast: 'Boast', drive: 'Straight drive', off: 'Off' }[k], S.targets[S.drill] === k, () => {
-          S.targets[S.drill] = k; G.nk.target = null; G.nk.shot = null; G.nk.impact = null; save(); refreshHud(); }, k === 'off' ? Object.assign({ flex: 0.6 }, so) : so))) });
-    // editing the blocks: just the sequence (the page would get too tall to read without looking down)
-    if (seqMode && G.seqEdit) rows = [tabs, ...mainRows, ...seqRows, bottom];
-    else rows = [tabs, ...mainRows, ...(prog === 'nick' || prog === 'length' ? seqRows : []), ...soloRows, ...(prog === 'custom' ? seqRows : []),
+          S.targets[S.drill] = k; G.nk.target = null; G.nk.shot = null; G.nk.impact = null; save(); refreshHud(); }, k === 'off' ? { flex: 0.6 } : undefined))) });
+    const optRows = [
       { label: 'Time between feeds  ·  position', items: [
         btn('–', false, () => { S.gap = Math.max(0.5, S.gap - 0.5); save(); }, { flex: 0.6 }),
         btn(`${S.gap.toFixed(1)} s`, false, null, { kind: 'value', flex: 0.9 }),
@@ -4636,30 +4671,9 @@ function buildMenu() {
         btn('Back left', false, () => placePlayer(-1.7, 8.3)),
         btn('Back right', false, () => placePlayer(1.7, 8.3)),
         btn(S.autoReturn ? 'Auto ball return: on' : 'Auto ball return: off', S.autoReturn, () => { S.autoReturn = !S.autoReturn; save(); }, { flex: 1.8, small: true })] },
-      bottom];
-  } else if (page === 'history') {
-    // the last 10 completed sequences, newest first; tap one for its breakdown (per shot, per kind of feed)
-    const sel = HIST.length ? HIST[Math.max(0, Math.min(G.histSel || 0, HIST.length - 1))] : null;
-    const best = {}, count = {};
-    for (const e of HIST) { const pc = pctOf(e.tot, e.max); best[e.prog] = Math.max(best[e.prog] === undefined ? -1 : best[e.prog], pc); count[e.prog] = (count[e.prog] || 0) + 1; }
-    const histLine = (e, i) => {
-      const pc = pctOf(e.tot, e.max), star = count[e.prog] > 1 && pc === best[e.prog] ? '  ★' : '';
-      return [btn(`${PROG_NAME[e.prog]}${star}`, e === sel, () => { G.histSel = i; }, { cap: whenTxt(e.t), flex: 2.0 }),
-        btn(`${e.tot} / ${e.max}`, false, null, { kind: 'value', cap: 'points', flex: 1.1 }),
-        btn(`${pc} %`, false, null, { kind: 'value', cap: 'score', flex: 0.75 }),
-        btn(`${e.n3}  ·  ${e.n2}  ·  ${e.n1}`, false, null, { kind: 'value', cap: '× 3   ·   × 2   ·   × 1', flex: 1.25 })];
-    };
-    const chunk = (a, n) => { const out = []; for (let i = 0; i < a.length; i += n) out.push(a.slice(i, i + n)); return out; };
-    const cellOf = ([k, p, m]) => btn(m ? `${pctOf(p, m)} %` : '–', false, null, { kind: 'value', cap: `${k}  ·  ${p} / ${m}` });
-    rows = [tabs,
-      { label: HIST.length ? `Last ${HIST.length} completed drill${HIST.length > 1 ? 's' : ''}  ·  newest first${Object.values(count).some(c => c > 1) ? '  ·  ★ best' : ''}` : 'Completed drills',
-        lines: HIST.length ? HIST.map(histLine)
-          : [[btn('Nothing yet: finish a Nick shot or Straight length drill and its score is kept here (the last 10)', false, null, { kind: 'value', small: true, info: true })]] },
-      ...(sel ? [{ label: `Details  ·  ${whenTxt(sel.t)}  ·  ${PROG_NAME[sel.prog]}`, lines: [
-        ...chunk((sel.groups || []).map(cellOf), 4),
-        ...chunk((sel.feeds || []).filter(f => f[2] > 0).map(cellOf), 3),
-        [btn(`${(BALL_TYPES[sel.ball] || { name: 'Ball' }).name} at ${sel.temp} °C  ·  small variation ${sel.vary ? 'on' : 'off'}  ·  ${sel.shots} shots`, false, null, { kind: 'value', small: true, info: true })]] }] : []),
-      bottom];
+    ];
+    rows = prog === 'custom' && G.seqEdit ? [tabs, ...soloRows, ...seqRows(), bottom]
+      : [tabs, ...soloRows, ...(prog === 'custom' ? seqRows() : []), ...optRows, bottom];
   } else if (page === 'ball') {
     const cell = (sp) => {
       const v = tuneVal(sp.k);
