@@ -70,5 +70,6 @@ Tip: bookmark the page in the headset's browser so you don't have to type the ad
   - **Defaults:** a warm (50 °C) double yellow, rigid ball and no spin. Turn **No spin** or **Rigid ball** off to try spin or the soft shell.
   - **Drop test:** the official 254 cm drop.
   - **Replays and test shots:** **Replay my last hit**, plus test shots from where you stand (drive, crosscourt, boast, lob, drop shot, kill). They play at real speed, ½× or ¼× slow motion.
+  - **Test · Volley fix** (off by default): keeps the strings solid when you hit the same ball several times in a row, as in a volley rally to yourself. Without it, a volley can leave the string bed in a broken state, and a later hit on the same racquet face goes through the strings: usually the 3rd or 4th volley. A single hit plays exactly the same with it on or off. While it's on, the free-play scoreboard says "volley fix on".
 
 Settings are saved in the headset's browser, so they're still there the next time you open the page.
