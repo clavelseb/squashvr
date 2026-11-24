@@ -78,6 +78,17 @@ In squash you go back to the T after every shot. In the drills with a feed, the 
 - **To the T:** always the T itself, however far. From the back corners that's about 3 m, so it needs a large room.
 - **Off:** no rating, no ring, and the box comes down.
 
+## Watching the ball
+
+In the drills the ball is fed from behind you, as an opponent would hit it, so you should be looking back at the feeder when the ball leaves, not at the front wall. The game rates that at every feed, from how far your head is turned:
+
+- **0 %:** your head faces the front wall as the ball leaves.
+- **100 %:** your head is turned to where the ball comes from. Within 30° of the feeder counts as all of it: the feeder is then well inside the headset's view.
+- In between, it goes with the angle: half way round is about two thirds in the main drills, where the feeder is some 135° behind you.
+- The best moment from 0.3 s before the ball leaves to 0.15 s after it is the one that counts, and only the turn of your head left or right, not up or down. Every feed counts, whether you hit the ball or not.
+
+Nothing is shown shot by shot. **At the end of a main drill** (or a custom sequence) the result on the front wall gives your watching-the-ball score, as a percentage beside the back-to-the-T score, and it's kept in the history. Boast practice and Drive practice feed from in front of you, so there is nothing to rate there.
+
 **Fitting the court to your room.** A web page can't make the headset show its boundary, but there are three ways to put the court where your room has space, at any time, in the middle of a drill too. Open the menu (the game is paused while it's open), then:
 
 - **Move with the stick.** The stick that moves you works with the menu open as well, and the menu comes along. Walk to where you want to play from, then slide the court under you.
@@ -95,7 +106,7 @@ In squash you go back to the T after every shot. In the drills with a feed, the 
     - **Nick shot drill** (320 shots). Each of the four nicks (backhand crosscourt and straight, then forehand crosscourt and straight) gets 10 shots off the normal feed (about 61 km/h), 10 off a slightly wider crosscourt feed, 10 off a feed slightly behind you, 10 off one further behind, 20 off a faster feed (about 80 km/h) and 20 off an even faster one (about 92 km/h). Every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (measured as the height above the nick where it hits the side wall, or how far from the wall it bounces first; all three distances can be changed in the menu).
     - **Straight length drill** (160 shots). The same feeds on the backhand, then the forehand, and you drive the ball straight down the wall to a length. Each drive is rated on length (where it dies, a touch long beats short), how tight it stays to the side wall all the way back, and touching the side wall late or not at all: 3 points for a drive rated 85 or more, 2 for 70, 1 for 50.
     - The hitting spot is the normal feed's spot for every block, so you move to the ball; the far-behind feed passes over your shoulder unless you step back. The feeds are identical unless you turn on **Small variation**. **Edit the blocks** changes any block's drill, side, target, feed and number of shots (six blocks a page, up to 30); **Back to the default drill** restores it. Press A or X to start again.
-  - **History**, under the two drills: the last 10 drills you played to the end (main drills or custom sequence), newest first, with the points, the score, the average speed of your shots, your back-to-the-T score and how many shots scored 3, 2 and 1, and a star on your best of each drill. Tap one for its breakdown by shot and by kind of feed (score and average speed), and the ball it was played with; tap it again to close it.
+  - **History**, under the two drills: the last 10 drills you played to the end (main drills or custom sequence), newest first, with the points, the score, the average speed of your shots, your back-to-the-T and watching-the-ball scores and how many shots scored 3, 2 and 1, and a star on your best of each drill. Tap one for its breakdown by shot and by kind of feed (score and average speed), and the ball it was played with; tap it again to close it.
 - **Solo & options:**
   - **Solo drills:** Free play, Lob serve, Hard serve, Volley feed, Loose ball, Boast feed, Boast practice and Drive practice, each with its feed side (forehand, backhand or both sides, every other feed) and target. **Custom sequence** (the old Alternate) is a sequence of your own, by default 10 backhand crosscourt nicks, 10 backhand straight nicks, then the same on the forehand.
   - The time between feeds, the ball type and temperature, and **Back to the T** (off, up to 0.5 m, up to 1 m, to the T).

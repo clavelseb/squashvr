@@ -102,9 +102,10 @@
         <li><strong>Nick shot drill</strong></li><li><strong>Straight length drill</strong></li><li>Free play</li><li>Lob serve</li><li>Hard serve</li><li>Volley feed</li><li>Loose ball</li><li>Boast feed</li><li>Boast practice</li><li>Drive practice</li><li>Custom sequence</li>
       </ul>
       <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the straight-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each solo drill can be set to crosscourt nick, straight nick, boast, straight drive or no target.</p>
-      <p class="lede" style="margin-top:10px">The two <strong>main drills</strong> run a sequence of blocks off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. The feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The menu opens on the main drills, with the <strong>history</strong> under them: the last 10 drills played to the end, with the score, the average speed of your shots, your back-to-the-T score and the breakdown by shot and by kind of feed. The solo drills, the <strong>Custom sequence</strong> (a sequence of your own), the ball and the other options are on the <strong>Solo &amp; options</strong> tab.</p>
+      <p class="lede" style="margin-top:10px">The two <strong>main drills</strong> run a sequence of blocks off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. The feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The menu opens on the main drills, with the <strong>history</strong> under them: the last 10 drills played to the end, with the score, the average speed of your shots, your back-to-the-T and watching-the-ball scores and the breakdown by shot and by kind of feed. The solo drills, the <strong>Custom sequence</strong> (a sequence of your own), the ball and the other options are on the <strong>Solo &amp; options</strong> tab.</p>
       <p class="lede" style="margin-top:10px">Five boxes on the front wall follow your play: the <strong>drill</strong> (block, shot, points), the <strong>speed</strong> of your last shot, the <strong>last shot</strong> (its result, the points it earned and the details), <strong>back to the T</strong>, and a debug box (refresh rate and frame time) when Show: FPS is on. The speed, last-shot and back-to-the-T boxes keep the two shots before the last one, smaller, to compare.</p>
       <p class="lede" style="margin-top:10px"><strong>Back to the T.</strong> After each shot in a drill, a ring on the floor shows where to go back to: red, then yellow, then green as you get there, and the box on the wall says Go back, Closer or Excellent. You are rated on how much of the way you covered before the next ball leaves (all the way 100 %, staying where you hit 0 %), and the drill ends with your back-to-the-T score, kept in the history. By default the ring is the T itself in the main drills (1.2 m from the hitting spot) and a metre towards it in the drills played from further back; Solo &amp; options sets it to up to 0.5 m, always the T, or off. In free play the box counts the shots of your rally.</p>
+      <p class="lede" style="margin-top:10px"><strong>Watching the ball.</strong> The drills feed the ball from behind you, so you should be looking back at the feeder as it leaves. Each feed is rated from how far your head is turned: 0 % facing the front wall, 100 % turned to where the ball comes from. Nothing is shown shot by shot; the drill's result gives the percentage, and it is kept in the history.</p>
       <p class="lede" style="margin-top:10px"><strong>Fitting the court to your room.</strong> With the menu open the game is paused and the stick still moves you, so you can slide the court to where your room has space in the middle of a drill; <strong>Hitting spot here</strong> (Solo &amp; options) puts the drill's hitting spot under your feet. Where the headset's browser gives its play area, its outline is drawn on the floor while the menu is open (or always).</p>
     </section>
     <section aria-labelledby="ph">
@@ -3374,12 +3375,13 @@ class WallHud {
     // with shots to compare with, they have a column on the right and the last shot keeps the rest
     const COL = prev.length ? 296 : 0, W = WB - COL, mw = W - (COL ? 52 : 80);
     const hasPts = m.pts !== null && m.pts !== undefined, lines = (m.lines || []).map(t => t || '');
-    const row = hasPts || !!lines[0], rest = lines.slice(1).filter(Boolean).slice(0, 3);
-    // the block of rows, centred in the box under the caption: headline, points + scores, up to three lines
-    const alone = !row && !rest.length, hHead = alone ? 132 : 104, hRow = row ? 62 : 0, hRest = rest.length * 35 + (rest.length ? 6 : 0);
+    const row = hasPts || !!lines[0], rest = lines.slice(1).filter(Boolean).slice(0, 4);
+    // the block of rows, centred in the box under the caption: headline, points + scores, up to three lines (four, a
+    // little tighter, for the result of a long drill)
+    const alone = !row && !rest.length, four = rest.length > 3, hHead = alone ? 132 : four ? 82 : 104, hRow = row ? (four ? 56 : 62) : 0, step = four ? 33 : 35, hRest = rest.length * step + (rest.length ? 6 : 0);
     let y = 62 + Math.max(0, (H - 62 - 18 - (hHead + hRow + hRest)) / 2);
     ctx.textAlign = 'center';
-    if (m.title) { ctx.fillStyle = m.color || '#ffffff'; this._fit(ctx, m.title, 800, alone ? 124 : 100, mw, 56); ctx.fillText(m.title, W / 2, y + hHead / 2 + 2, mw); }
+    if (m.title) { ctx.fillStyle = m.color || '#ffffff'; this._fit(ctx, m.title, 800, alone ? 124 : four ? 82 : 100, mw, 56); ctx.fillText(m.title, W / 2, y + hHead / 2 + 2, mw); }
     y += hHead;
     if (row) {
       const p = Math.max(0, Math.min(3, m.pts | 0)), ptxt = hasPts ? `+${m.pts} point${m.pts === 1 ? '' : 's'}` : '';
@@ -3397,7 +3399,7 @@ class WallHud {
     y += rest.length ? 6 : 0;
     let px = 27; for (const ln of rest) px = Math.min(px, this._fit(ctx, ln, 500, 27, mw, 20));       // one size for the lines: the longest decides
     ctx.fillStyle = HUD_SOFT; ctx.font = `500 ${px}px ${FONT}`;
-    for (const ln of rest) { ctx.fillText(ln, W / 2, y + 17, mw); y += 35; }
+    for (const ln of rest) { ctx.fillText(ln, W / 2, y + 17, mw); y += step; }
     if (!COL) return;
     // the two shots before, newest on top: the headline, and under it the points (or, with no points, the scores)
     const x0 = W + 22, cw = WB - 26 - x0;
@@ -3531,7 +3533,7 @@ function tinSignCanvas(wallW, tinH) {
 
 
 
-const VERSION = '1.26';
+const VERSION = '1.27';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -3796,6 +3798,9 @@ const G = {
   // the last three shots for the wall (v1.26): cur is the shot the last-shot box is about, log the two before it
   // ({ title, color, pts, line }), sp the last three speeds, newest first ({ num, color })
   shots: { cur: null, log: [], sp: [] },
+  // watching the ball (v1.27): buf the last moments before the next feed ([time, rating]), pend the feed just gone,
+  // sum and n the drill's ratings
+  watch: { buf: [], pend: null, sum: 0, n: 0 },
   rally: { n: 0, best: 0 },  // free play: shots in a row in this rally, and the best so far
 };
 
@@ -4122,14 +4127,17 @@ function seqTick() {
 function seqSummary() {
   const t = seqTotals(), B = SQ().blocks, np = S.nickPts;
   audio.beep(988, 0.10, 0.16); setTimeout(() => audio.beep(1319, 0.16, 0.16), 140);
+  watchEnd();
   const saved = G.sq.saved = recordHistory(t, B);
+  const wp = watchPct(), tp = S.tee === 'off' ? null : teePct();
+  const habits = [wp === null ? '' : `Watching the ball ${wp} %`, tp === null ? '' : `back to the T ${tp} %`].filter(Boolean).join('   ·   ').replace(/^b/, 'B');
   const allDrive = B.every(b => blockTarget(b) === 'drive');
   // the result box: the points, their share and make-up, then the totals per shot and per kind of feed
   const grp = groupTotals(B, t, groupKey), fds = groupTotals(B, t, feedKey).filter(f => f[2] > 0), half = Math.ceil(fds.length / 2);
   showMain(t.max ? `${t.tot} / ${t.max}` : 'Sequence done', '#ffd34d', { cap: `${PROG_NAME[S.prog]}: result`, lines: t.max ? [
     `${Math.round(100 * t.tot / t.max)} %   ·   ${t.n3} × 3   ·   ${t.n2} × 2   ·   ${t.n1} × 1`,
-    ...(B.length <= 6 ? [B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('  ·  ')] : [groupLine(grp), groupLine(fds.slice(0, half)), groupLine(fds.slice(half))])]
-    : ['no shots at a target'] });
+    ...(B.length <= 6 ? [B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('  ·  ')] : [groupLine(grp), groupLine(fds.slice(0, half)), groupLine(fds.slice(half))]), habits]
+    : ['no shots at a target', habits] });
   if (t.kmh) hud.set('speed', { num: String(t.kmh), color: '#ffffff', tag: 'average of the drill', prev: [] });
   hudTee();
   const legend = allDrive ? '3 = drive 85+ (great)  ·  2 = drive 70+ (good)  ·  1 = drive 50+'
@@ -4163,7 +4171,8 @@ function recordHistory(t, B) {
   if (!t.max) return false;
   HIST.unshift({ t: Date.now(), prog: S.prog, tot: t.tot, max: t.max, n3: t.n3, n2: t.n2, n1: t.n1, kmh: t.kmh, shots: G.sq.recs.length,
     groups: groupTotals(B, t, groupKey), feeds: groupTotals(B, t, feedKey), ball: S.ball, temp: WARM_T[S.temp] || Math.round(phys.T), vary: !!SQ().vary,
-    tee: S.tee === 'off' ? null : teePct(), teeN: G.tee.n, teeMode: S.tee });      // back to the T: the drill's average (%), over how many shots
+    tee: S.tee === 'off' ? null : teePct(), teeN: G.tee.n, teeMode: S.tee,       // back to the T: the drill's average (%), over how many shots
+    watch: watchPct(), watchN: G.watch.n });                                     // watching the ball: the same, over the feeds
   if (HIST.length > HIST_MAX) HIST.length = HIST_MAX;
   G.histSel = -1; saveHist();
   return true;
@@ -4429,6 +4438,7 @@ function launchFeed() {
   audio.impact('feed', sol.from, Math.hypot(sol.v[0], sol.v[1], sol.v[2]) * 0.9);
   G.feeder.t = G.time;
   if (G.tee.pend) G.tee.pend.until = G.time + TEE_GRACE;     // back to the T: judged as the next ball leaves
+  watchLaunch(sol);                                          // watching the ball: were you looking at where it comes from
   requestFeeds(1);
   // re-solve if the ball temperature drifted
   if (Math.abs(phys.T - lastSolverT) > 4) { lastSolverT = phys.T; const keep = G.queue; configureFeeds(); G.queue = keep.slice(0, 1); }
@@ -4632,7 +4642,7 @@ const teeLevel = (e) => (e >= 0.8 ? 2 : e >= 0.4 ? 1 : 0);
 // a new drill (or the same from its start): the rating, the rally count and the speed box start afresh
 function teeReset() {
   const te = G.tee; te.pend = null; te.sum = 0; te.n = 0; te.last = -1; te.home = false; te.anchor = null; te.hist = []; G.rally.n = 0;
-  G.shots.cur = null; G.shots.log = []; G.shots.sp = [];
+  G.shots.cur = null; G.shots.log = []; G.shots.sp = []; watchReset();
   hud.set('speed', { num: '', color: '#ffffff', tag: '', prev: [] }); hudTee();
 }
 // the spot to go back to: from the drill's hitting spot (before the feeds are known: from where you stand)
@@ -4661,6 +4671,40 @@ function teeFinish() {
   te.pend = null; te.sum += p.e; te.n++; te.last = p.level;
   te.hist.unshift({ level: p.level, pct: Math.round(100 * p.e) }); if (te.hist.length > 3) te.hist.length = 3;
   hudTee();
+}
+// ---------------------------------------------------------------- watching the ball (v1.27)
+// As a feed leaves, are you looking at where it comes from? In the drills the ball is fed from behind you, so that
+// means looking back, as you would watch your opponent hit. Only the head's turn counts (left-right, not up-down):
+//   0: the head faces the front wall;  1: it is turned to the feeder, within WATCH_TOL (the feeder is then well inside
+//   the headset's view);  in between: in proportion to the angle.
+// The best moment from WATCH_BEFORE before the ball leaves to WATCH_AFTER after it counts. Every feed is rated, hit or
+// not, except where the feeder is in view anyway when you face the front wall (less than WATCH_MIN off straight
+// ahead: Boast practice, Drive practice). The drill's score is the average, shown with the result and kept in the
+// history; nothing is shown shot by shot.
+const WATCH_TOL = 30 * Math.PI / 180, WATCH_MIN = 45 * Math.PI / 180, WATCH_BEFORE = 0.3, WATCH_AFTER = 0.15;
+function watchRate(from) {
+  const a = Math.atan2(from[0] - head.p[0], -(from[2] - head.p[2])), h = Math.atan2(head.fwd[0], -head.fwd[2]);     // bearings: 0 = straight at the front wall
+  let d = Math.abs(a - h); if (d > Math.PI) d = 2 * Math.PI - d;
+  const a0 = Math.abs(a);
+  return a0 < WATCH_MIN ? null : Math.max(0, Math.min(1, (a0 - d) / (a0 - WATCH_TOL)));
+}
+const watchPct = () => (G.watch.n ? Math.round(100 * G.watch.sum / G.watch.n) : null);
+function watchReset() { const w = G.watch; w.buf.length = 0; w.pend = null; w.sum = 0; w.n = 0; }
+function watchEnd() { const w = G.watch, p = w.pend; if (p) { w.pend = null; w.sum += p.e; w.n++; } }
+function watchLaunch(sol) {         // a feed leaves
+  const w = G.watch; watchEnd();
+  const now = watchRate(sol.from);
+  if (now !== null) { let e = now; for (const b of w.buf) if (b[1] > e) e = b[1]; w.pend = { from: sol.from, e, until: G.time + WATCH_AFTER }; }
+  w.buf.length = 0;
+}
+function watchTrack() {             // every frame of play
+  const w = G.watch, p = w.pend;
+  if (drillNow() === 'free' || G.replay) { w.buf.length = 0; w.pend = null; return; }
+  if (p) { const r = watchRate(p.from); if (r !== null && r > p.e) p.e = r; if (G.time >= p.until) watchEnd(); }
+  const next = G.queue[0];
+  if (!next) { w.buf.length = 0; return; }
+  const r = watchRate(next.from); if (r !== null) w.buf.push([G.time, r]);
+  while (w.buf.length && w.buf[0][0] < G.time - WATCH_BEFORE) w.buf.shift();
 }
 // the box: back to the T in the drills; in free play the rally (shots in a row)
 function hudTee() {
@@ -5199,14 +5243,17 @@ function buildMenu() {
     const lines = [];
     HIST.forEach((e, i) => {
       const pc = pctOf(e.tot, e.max), star = count[e.prog] > 1 && pc === best[e.prog] ? '  ★' : '', open = i === G.histSel;
-      lines.push([btn(`${PROG_NAME[e.prog]}${star}`, open, () => { G.histSel = open ? -1 : i; }, { cap: whenTxt(e.t), flex: 2.0, h: 60 }),
+      lines.push([btn(`${PROG_NAME[e.prog]}${star}`, open, () => { G.histSel = open ? -1 : i; }, { cap: whenTxt(e.t), flex: 1.9, h: 60 }),
         btn(`${e.tot} / ${e.max}`, false, null, { kind: 'value', cap: 'points', flex: 1.05, h: 60 }),
         btn(`${pc} %`, false, null, { kind: 'value', cap: 'score', flex: 0.75, h: 60 }),
         btn(e.kmh ? `${e.kmh} km/h` : '–', false, null, { kind: 'value', cap: 'avg speed', flex: 0.95, h: 60 }),
         btn(Number.isFinite(e.tee) ? `${e.tee} %` : '–', false, null, { kind: 'value', cap: 'back to T', flex: 0.8, h: 60 }),
-        btn(`${e.n3} · ${e.n2} · ${e.n1}`, false, null, { kind: 'value', cap: '×3 · ×2 · ×1', flex: 1.0, h: 60 })]);
+        btn(Number.isFinite(e.watch) ? `${e.watch} %` : '–', false, null, { kind: 'value', cap: 'watch', flex: 0.72, h: 60 }),
+        btn(`${e.n3} · ${e.n2} · ${e.n1}`, false, null, { kind: 'value', cap: '×3 · ×2 · ×1', flex: 0.95, h: 60 })]);
       if (open) lines.push(...chunk((e.groups || []).map(cellOf), 4), ...chunk((e.feeds || []).filter(f => f[2] > 0).map(cellOf), 3),
-        [btn(`${(BALL_TYPES[e.ball] || { name: 'Ball' }).name} at ${e.temp} °C  ·  small variation ${e.vary ? 'on' : 'off'}  ·  ${e.shots} shots${Number.isFinite(e.tee) ? `  ·  back to the T ${e.tee} % (${{ near: 'up to 0.5 m', mid: 'up to 1 m', full: 'to the T' }[e.teeMode] || 'to the T'})` : ''}`, false, null, { kind: 'value', small: true, info: true, h: 56 })]);
+        [btn(`${(BALL_TYPES[e.ball] || { name: 'Ball' }).name} at ${e.temp} °C  ·  small variation ${e.vary ? 'on' : 'off'}  ·  ${e.shots} shots`, false, null, { kind: 'value', small: true, info: true, h: 56 })],
+        ...(Number.isFinite(e.tee) || Number.isFinite(e.watch) ? [[btn([Number.isFinite(e.watch) ? `Watching the ball ${e.watch} % (as each feed leaves)` : '',
+          Number.isFinite(e.tee) ? `back to the T ${e.tee} % (${{ near: 'up to 0.5 m', mid: 'up to 1 m', full: 'to the T' }[e.teeMode] || 'to the T'})` : ''].filter(Boolean).join('  ·  ').replace(/^b/, 'B'), false, null, { kind: 'value', small: true, info: true, h: 56 })]] : []));
     });
     return [{ label: `History  ·  last ${HIST.length} completed  ·  tap one for details${Object.values(count).some(c => c > 1) ? '  ·  ★ best' : ''}`, lines }];
   };
@@ -5855,7 +5902,7 @@ function gameStep(dt) {
   } else { phys.time = t1; scene.ball.blur = 0; scene.ball.dots = 1; }
   phys.advanceTemperature(dt);
   handleEvents();
-  teeTrack();
+  teeTrack(); watchTrack();
   // ---- deep drive: follow the ball down the wall ----
   const dsh = G.nk.shot;
   if (dsh && dsh.kind === 'drive' && !dsh.done && !dsh.b2 && G.ball === 'play' && !G.over) trackDriveFrame(dsh);
@@ -5986,7 +6033,7 @@ function hudStrip() {
   let x = gap; for (const pn of on) { g.drawImage(hud.box[pn.key].canvas, x, gap); x += hud.box[pn.key].canvas.width + gap; }
   return c;
 }
-window.__squash = { anchorMenu, readRoom, roomText, shotNew, hud, hudFlush, hudStrip, scene, TEE, teeReset, head, nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
+window.__squash = { watchRate, watchPct, anchorMenu, readRoom, roomText, shotNew, hud, hudFlush, hudStrip, scene, TEE, teeReset, head, nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
   toggleMenu, TUNE_SPEC, setTune, resetTune, dropTest, dropDemo, testShot, replayLastHit, endReplay, onSolverMsgs: () => solverLog, RR, applyFrameRate,
   seqRestart, seqTotals, seqLine, seqDefault, seqPlusDefault, seqLenDefault, nickPtsValid, nickPoints, drillNow, sideNow,
   pickProg, pickSolo, HIST, whenTxt, PROG_NAME, SURF, COURT, RQ };
