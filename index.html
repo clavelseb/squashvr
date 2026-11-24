@@ -103,8 +103,9 @@
       </ul>
       <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the straight-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each solo drill can be set to crosscourt nick, straight nick, boast, straight drive or no target.</p>
       <p class="lede" style="margin-top:10px">The two <strong>main drills</strong> run a sequence of blocks off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. The feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The menu opens on the main drills, with the <strong>history</strong> under them: the last 10 drills played to the end, with the score, the average speed of your shots, your back-to-the-T score and the breakdown by shot and by kind of feed. The solo drills, the <strong>Custom sequence</strong> (a sequence of your own), the ball and the other options are on the <strong>Solo &amp; options</strong> tab.</p>
-      <p class="lede" style="margin-top:10px">Five boxes on the front wall follow your play: the <strong>drill</strong> (block, shot, points), the <strong>speed</strong> of your last shot, the <strong>last shot</strong> (its result, the points it earned and the details), <strong>back to the T</strong>, and a debug box (refresh rate and frame time) when Show: FPS is on.</p>
+      <p class="lede" style="margin-top:10px">Five boxes on the front wall follow your play: the <strong>drill</strong> (block, shot, points), the <strong>speed</strong> of your last shot, the <strong>last shot</strong> (its result, the points it earned and the details), <strong>back to the T</strong>, and a debug box (refresh rate and frame time) when Show: FPS is on. The speed, last-shot and back-to-the-T boxes keep the two shots before the last one, smaller, to compare.</p>
       <p class="lede" style="margin-top:10px"><strong>Back to the T.</strong> After each shot in a drill, a ring on the floor shows where to go back to: red, then yellow, then green as you get there, and the box on the wall says Go back, Closer or Excellent. You are rated on how much of the way you covered before the next ball leaves (all the way 100 %, staying where you hit 0 %), and the drill ends with your back-to-the-T score, kept in the history. By default the ring is the T itself in the main drills (1.2 m from the hitting spot) and a metre towards it in the drills played from further back; Solo &amp; options sets it to up to 0.5 m, always the T, or off. In free play the box counts the shots of your rally.</p>
+      <p class="lede" style="margin-top:10px"><strong>Fitting the court to your room.</strong> With the menu open the game is paused and the stick still moves you, so you can slide the court to where your room has space in the middle of a drill; <strong>Hitting spot here</strong> (Solo &amp; options) puts the drill's hitting spot under your feet. Where the headset's browser gives its play area, its outline is drawn on the floor while the menu is open (or always).</p>
     </section>
     <section aria-labelledby="ph">
       <h2 id="ph">Ball &amp; racquet physics</h2>
@@ -2953,6 +2954,10 @@ class Renderer {
       gl.uniformMatrix4fv(fu.uModel, false, rg.m); gl.uniform1i(fu.uMode, rg.mode === undefined ? 1 : rg.mode);
       gl.uniform4f(fu.uTint, rg.col[0], rg.col[1], rg.col[2], rg.a); this._draw(this.disc);
     }
+    if (sc.lines) for (const ln of sc.lines) {   // lines on the floor (the room's outline)
+      gl.uniformMatrix4fv(fu.uModel, false, ln.m); gl.uniform1i(fu.uMode, 0);
+      gl.uniform4f(fu.uTint, ln.col[0], ln.col[1], ln.col[2], ln.a); this._draw(this.beam);
+    }
     if (sc.ghost && sc.ghost.on) {   // where the controller / hand is (grip adjust mode)
       gl.uniformMatrix4fv(fu.uModel, false, sc.ghost.m); gl.uniform1i(fu.uMode, 0);
       gl.uniform4f(fu.uTint, 0.55, 0.82, 1.0, 0.30); this._draw(this.lowSphere);
@@ -3276,6 +3281,7 @@ const HUD_SIZE = { drill: [452, 360], speed: [355, 360], shot: [924, 360], tee: 
 const HUD_BG = 'rgba(17,20,27,0.94)', HUD_EDGE = 'rgba(255,255,255,0.16)', HUD_DIM = 'rgba(255,255,255,0.56)', HUD_SOFT = 'rgba(190,225,255,0.92)';
 // traffic light of the back-to-the-T box: level 0 red, 1 yellow, 2 green; -1 nothing to say yet
 const TEE_FILL = ['#e0444b', '#f2c230', '#43c06f'], TEE_INK = ['#ffffff', '#15181f', '#10231a'];
+const TEE_VERDICT = ['Bad', 'Good', 'Excellent'];           // the verdicts of the two recoveries before the last one
 const PTS_FILL = ['rgba(255,255,255,0.16)', '#bfe3ff', '#9fe870', '#ffd34d'], PTS_INK = ['#ffffff', '#11141b', '#11141b', '#11141b'];
 const spaced = (t) => String(t).toUpperCase().split('').join(String.fromCharCode(8202));
 class WallHud {
@@ -3286,9 +3292,10 @@ class WallHud {
       this.box[k] = { canvas: c, ctx: c.getContext('2d'), dirty: true, key: '', w: HUD_SIZE[k][0] / HUD_PX, h: HUD_SIZE[k][1] / HUD_PX };
     }
     this.drill = { title: '', lines: [], hint: '' };                           // lines: [[text, 'b' | 'n' | 'dim'], ...]
-    this.speed = { num: '', color: '#ffffff', tag: '' };
-    this.shot = { cap: '', title: 'Ready', color: '#ffffff', pts: null, lines: [] };   // lines[0] sits beside the points
-    this.tee = { cap: 'Back to the T', label: '', level: -1, big: '', sub: '' };
+    // prev (v1.26): the two shots before the last one, newest first, drawn smaller under or beside it
+    this.speed = { num: '', color: '#ffffff', tag: '', prev: [] };                     // prev: [{ num, color }]
+    this.shot = { cap: '', title: 'Ready', color: '#ffffff', pts: null, lines: [], prev: [] };   // lines[0] sits beside the points; prev: [{ title, color, pts, line }]
+    this.tee = { cap: 'Back to the T', label: '', level: -1, big: '', sub: '', prev: [] };       // prev: [{ level, pct }]
     this.debug = { lines: [] };
   }
   // a box's content; it is redrawn only if something in it changed
@@ -3324,6 +3331,13 @@ class WallHud {
     if (out.length > maxLines) { out.length = maxLines; out[maxLines - 1] += ' …'; }
     return out;
   }
+  // the text cut to maxW with an ellipsis (after _fit has gone down to its smallest size)
+  _clip(ctx, text, maxW) {
+    let t = String(text);
+    if (ctx.measureText(t).width <= maxW) return t;
+    while (t.length > 1 && ctx.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+    return t.replace(/[\s·,]+$/, '') + '…';
+  }
   draw(k) { this['_' + k](); this.box[k].dirty = false; }
   // ---- the boxes ----
   _drill() {
@@ -3341,15 +3355,24 @@ class WallHud {
     if (m.hint) { ctx.fillStyle = HUD_DIM; this._fit(ctx, m.hint, 500, 22, mw, 17); ctx.fillText(m.hint, x, H - 34, mw); }
   }
   _speed() {
-    const { ctx, W } = this._panel('speed', 'Speed'), m = this.speed;
+    const m = this.speed, prev = (m.prev || []).slice(0, 2), { ctx, W } = this._panel('speed', prev.length ? 'Speed · km/h' : 'Speed');
     ctx.textAlign = 'center';
-    if (m.num) { ctx.fillStyle = m.color || '#ffffff'; this._fit(ctx, m.num, 800, 150, W - 44, 90); ctx.fillText(m.num, W / 2, 172, W - 36); }
-    else { ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = `700 96px ${FONT}`; ctx.fillText('–', W / 2, 168); }      // no shot yet
-    ctx.fillStyle = 'rgba(255,255,255,0.72)'; ctx.font = `600 34px ${FONT}`; ctx.fillText('km/h', W / 2, 268);
-    if (m.tag) { ctx.fillStyle = HUD_DIM; this._fit(ctx, m.tag, 500, 24, W - 48, 18); ctx.fillText(m.tag, W / 2, 322, W - 40); }
+    if (prev.length) {
+      // the last three shots, newest on top and largest
+      ctx.fillStyle = m.color || '#ffffff'; this._fit(ctx, m.num, 800, 118, W - 44, 80); ctx.fillText(m.num, W / 2, 126, W - 36);
+      prev.forEach((p, i) => { ctx.globalAlpha = i ? 0.55 : 0.82; ctx.fillStyle = p.color || '#ffffff'; ctx.font = `700 ${i ? 52 : 64}px ${FONT}`; ctx.fillText(p.num, W / 2, i ? 277 : 218, W - 60); });
+      ctx.globalAlpha = 1;
+    } else {
+      if (m.num) { ctx.fillStyle = m.color || '#ffffff'; this._fit(ctx, m.num, 800, 150, W - 44, 90); ctx.fillText(m.num, W / 2, 172, W - 36); }
+      else { ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = `700 96px ${FONT}`; ctx.fillText('–', W / 2, 168); }      // no shot yet
+      ctx.fillStyle = 'rgba(255,255,255,0.72)'; ctx.font = `600 34px ${FONT}`; ctx.fillText('km/h', W / 2, 268);
+    }
+    if (m.tag) { ctx.fillStyle = HUD_DIM; this._fit(ctx, m.tag, 500, 24, W - 48, 18); ctx.fillText(m.tag, W / 2, prev.length ? 328 : 322, W - 40); }
   }
   _shot() {
-    const m = this.shot, { ctx, W, H } = this._panel('shot', m.cap), mw = W - 80;
+    const m = this.shot, { ctx, W: WB, H } = this._panel('shot', m.cap), prev = (m.prev || []).slice(0, 2);
+    // with shots to compare with, they have a column on the right and the last shot keeps the rest
+    const COL = prev.length ? 296 : 0, W = WB - COL, mw = W - (COL ? 52 : 80);
     const hasPts = m.pts !== null && m.pts !== undefined, lines = (m.lines || []).map(t => t || '');
     const row = hasPts || !!lines[0], rest = lines.slice(1).filter(Boolean).slice(0, 3);
     // the block of rows, centred in the box under the caption: headline, points + scores, up to three lines
@@ -3375,11 +3398,43 @@ class WallHud {
     let px = 27; for (const ln of rest) px = Math.min(px, this._fit(ctx, ln, 500, 27, mw, 20));       // one size for the lines: the longest decides
     ctx.fillStyle = HUD_SOFT; ctx.font = `500 ${px}px ${FONT}`;
     for (const ln of rest) { ctx.fillText(ln, W / 2, y + 17, mw); y += 35; }
+    if (!COL) return;
+    // the two shots before, newest on top: the headline, and under it the points (or, with no points, the scores)
+    const x0 = W + 22, cw = WB - 26 - x0;
+    ctx.fillStyle = HUD_EDGE; ctx.fillRect(W, 70, 2, H - 100);
+    ctx.textAlign = 'left'; ctx.fillStyle = HUD_DIM; ctx.font = `700 19px ${FONT}`; ctx.fillText(spaced('Before'), x0, 43);
+    prev.forEach((e, i) => {
+      const pts = e.pts !== null && e.pts !== undefined, two = pts || !!e.line, top = 78 + i * 132, cy = top + (two ? 36 : 60);
+      ctx.globalAlpha = i ? 0.62 : 0.94;
+      ctx.fillStyle = e.color || '#ffffff'; this._fit(ctx, e.title, 800, 38, cw, 21); ctx.fillText(this._clip(ctx, e.title, cw), x0, cy);
+      if (pts) {
+        const p = Math.max(0, Math.min(3, e.pts | 0)), t = `+${e.pts} point${e.pts === 1 ? '' : 's'}`;
+        ctx.font = `800 27px ${FONT}`; const wp = ctx.measureText(t).width + 34;
+        rr(ctx, x0, top + 64, wp, 44, 22); ctx.fillStyle = PTS_FILL[p]; ctx.fill();
+        ctx.textAlign = 'center'; ctx.fillStyle = PTS_INK[p]; ctx.fillText(t, x0 + wp / 2, top + 87); ctx.textAlign = 'left';
+      } else if (e.line) { ctx.fillStyle = 'rgba(255,255,255,0.82)'; this._fit(ctx, e.line, 500, 25, cw, 19); ctx.fillText(this._clip(ctx, e.line, cw), x0, top + 84); }
+    });
+    ctx.globalAlpha = 1;
   }
   _tee() {
-    const m = this.tee, { ctx, W } = this._panel('tee', m.cap), lv = m.level;
-    rr(ctx, 24, 74, W - 48, 112, 24); ctx.fillStyle = lv >= 0 ? TEE_FILL[lv] : 'rgba(255,255,255,0.10)'; ctx.fill();
+    const m = this.tee, { ctx, W } = this._panel('tee', m.cap), lv = m.level, prev = (m.prev || []).slice(0, 2);
     ctx.textAlign = 'center';
+    if (prev.length) {
+      // the last recovery on top, the two before it under it (their word and how much of the way), then the average
+      rr(ctx, 24, 68, W - 48, 84, 22); ctx.fillStyle = lv >= 0 ? TEE_FILL[lv] : 'rgba(255,255,255,0.10)'; ctx.fill();
+      ctx.fillStyle = lv >= 0 ? TEE_INK[lv] : 'rgba(255,255,255,0.75)'; this._fit(ctx, m.label || '–', 800, 50, W - 84, 30); ctx.fillText(m.label || '–', W / 2, 111, W - 76);
+      prev.forEach((p, i) => {
+        const y = 160 + i * 50, t = `${TEE_VERDICT[p.level] || ''} · ${p.pct} %`;
+        ctx.globalAlpha = i ? 0.62 : 0.92;
+        rr(ctx, 44, y, W - 88, 43, 14); ctx.fillStyle = TEE_FILL[p.level] || 'rgba(255,255,255,0.10)'; ctx.fill();
+        ctx.fillStyle = TEE_INK[p.level] || '#ffffff'; this._fit(ctx, t, 700, 26, W - 112, 18); ctx.fillText(t, W / 2, y + 22.5, W - 104);
+      });
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#ffffff'; this._fit(ctx, m.big || '–', 800, 50, W - 60, 34); ctx.fillText(m.big || '–', W / 2, 291, W - 52);
+      if (m.sub) { ctx.fillStyle = HUD_DIM; this._fit(ctx, m.sub, 500, 21, W - 44, 16); ctx.fillText(m.sub, W / 2, 332, W - 36); }
+      return;
+    }
+    rr(ctx, 24, 74, W - 48, 112, 24); ctx.fillStyle = lv >= 0 ? TEE_FILL[lv] : 'rgba(255,255,255,0.10)'; ctx.fill();
     ctx.fillStyle = lv >= 0 ? TEE_INK[lv] : 'rgba(255,255,255,0.75)'; this._fit(ctx, m.label || '–', 800, 56, W - 84, 30); ctx.fillText(m.label || '–', W / 2, 132, W - 76);
     ctx.fillStyle = '#ffffff'; this._fit(ctx, m.big || '–', 800, 76, W - 60, 40); ctx.fillText(m.big || '–', W / 2, 252, W - 52);
     if (m.sub) { ctx.fillStyle = HUD_DIM; this._fit(ctx, m.sub, 500, 22, W - 44, 16); ctx.fillText(m.sub, W / 2, 320, W - 36); }
@@ -3476,7 +3531,7 @@ function tinSignCanvas(wallW, tinH) {
 
 
 
-const VERSION = '1.25';
+const VERSION = '1.26';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -3533,6 +3588,9 @@ const DEFAULTS = {
   // back to the T between shots (v1.25): off, or how far you are asked to walk back towards the T: 'near' up to
   // 0.5 m, 'mid' up to 1 m (the T itself in the main drills), 'full' always the T
   tee: 'mid',
+  // the outline of the room's play area on the floor (v1.26; where the headset's browser gives it): 'menu' while the
+  // menu is open, 'always', or 'off'
+  showRoom: 'menu',
   targets: { volley: 'cross', loose: 'cross', boast: 'cross', drive: 'boast', rail: 'drive' },   // per drill: cross | straight | boast | drive | off
 };
 const S = (() => {
@@ -3577,6 +3635,7 @@ const S = (() => {
   if (!(saved.softRev >= 1) || ![0, 1, 2].includes(o.softAssist)) o.softAssist = 2;
   o.softRev = 1;
   if (!['off', 'near', 'mid', 'full'].includes(o.tee)) o.tee = 'mid';
+  if (!['menu', 'always', 'off'].includes(o.showRoom)) o.showRoom = 'menu';
   delete o.stringFix;                 // v1.22's test switch: the fix is part of the engine since v1.23
   return o;
 })();
@@ -3732,7 +3791,11 @@ const G = {
   rallySp: 0,                // speed of the rally's first hit (m/s)
   // back to the T (v1.25): the recovery under way after a shot (pend), and the drill's running sum of the ratings
   // home: the player has been placed for this drill; anchor: the hitting spot they were last placed for (see autoPlace)
-  tee: { pend: null, sum: 0, n: 0, last: -1, home: false, anchor: null },
+  // hist (v1.26): the last three recoveries rated, newest first ({ level, pct })
+  tee: { pend: null, sum: 0, n: 0, last: -1, home: false, anchor: null, hist: [] },
+  // the last three shots for the wall (v1.26): cur is the shot the last-shot box is about, log the two before it
+  // ({ title, color, pts, line }), sp the last three speeds, newest first ({ num, color })
+  shots: { cur: null, log: [], sp: [] },
   rally: { n: 0, best: 0 },  // free play: shots in a row in this rally, and the best so far
 };
 
@@ -3755,6 +3818,29 @@ updateRig();
 const head = { p: [0, 1.7, 6.6], q: [0, 0, 0, 1], refP: { x: 0, y: 1.7, z: 0 }, refQ: { x: 0, y: 0, z: 0, w: 1 }, fwd: [0, 0, -1], up: [0, 1, 0], yaw: 0 };
 function headYawRef() { const o = head.refQ; const f = Q.rot([0, 0, 0], [o.x, o.y, o.z, o.w], [0, 0, -1]); return Math.atan2(-f[0], -f[2]); }
 
+// The room (v1.26). A web page cannot make the headset show its boundary, but it can ask for the play area's outline
+// (a 'bounded-floor' reference space) and draw it: on the floor, where the court is in your room. Quest's browser
+// gives the rectangle of the play area, and may give nothing at all (a stationary boundary, or not yet): then there
+// is no outline. xr.room: the outline's corners in the tracking space [[x, z], ...], xr.roomSize its two sides (m).
+function readRoom(frame) {
+  xr.room = null;
+  const bs = xr.boundSpace; if (!bs) return;
+  let g = null, pose = null;
+  try { g = bs.boundsGeometry; if (g && g.length >= 3) pose = frame.getPose(bs, xr.refSpace); } catch (e) { return; }
+  if (!pose) return;
+  const m = pose.transform.matrix, step = Math.max(1, Math.ceil(g.length / 40)), pts = [];
+  for (let i = 0; i < g.length; i += step) { const x = g[i].x, z = g[i].z; pts.push([m[0] * x + m[8] * z + m[12], m[2] * x + m[10] * z + m[14]]); }
+  let w, d;
+  if (pts.length === 4) { w = Math.hypot(pts[1][0] - pts[0][0], pts[1][1] - pts[0][1]); d = Math.hypot(pts[2][0] - pts[1][0], pts[2][1] - pts[1][1]); }
+  else { const xs = pts.map(p => p[0]), zs = pts.map(p => p[1]); w = Math.max(...xs) - Math.min(...xs); d = Math.max(...zs) - Math.min(...zs); }
+  if (!(w > 0.5 && d > 0.5) || !(w < 30 && d < 30)) return;            // nothing usable (a stationary boundary's small square is still drawn)
+  xr.room = pts; xr.roomSize = [w, d];
+}
+const roomOn = () => !!xr.room && (S.showRoom === 'always' || (S.showRoom === 'menu' && G.menuOpen));
+const roomText = () => (!xr.session ? 'Room outline: in the headset'
+  : xr.room ? `Room outline on the floor: your play area as the headset gives it, about ${xr.roomSize[0].toFixed(1)} × ${xr.roomSize[1].toFixed(1)} m`
+    : 'Room outline: this headset\'s browser gives no play area (a stationary boundary?)');
+
 // place the player so that their head is at (x,z), facing the front wall
 function placePlayer(x, z) {
   const W2 = COURT.W / 2;
@@ -3765,6 +3851,7 @@ function placePlayer(x, z) {
   G.rig.x = x - (c * px + s * pz); G.rig.z = z - (-s * px + c * pz);
   updateRig(); G.racq.epoch++;
   if (G.tee.pend) { G.tee.pend = null; hudTee(); }       // moved by the game: this recovery is not rated
+  if (G.menuOpen) G.menuFollow = true;                   // moved from the menu: the menu comes along (next frame, when the head is known there)
 }
 // Where the player is put for a new drill, side or block (Auto-place me). Without back to the T: on the spot the feed
 // is played from, every time. With it that would not do: placed again wherever you stand after walking back, the T
@@ -3776,8 +3863,10 @@ function autoPlace(st) {
   const te = G.tee;
   if (!teeOn() || !te.home || !te.anchor) placePlayer(st[0], st[1]);
   else if (st[0] !== te.anchor[0] || st[1] !== te.anchor[1]) {
-    G.rig.x += st[0] - te.anchor[0]; G.rig.z += st[1] - te.anchor[1]; updateRig(); G.racq.epoch++;
+    const dx = st[0] - te.anchor[0], dz = st[1] - te.anchor[1];
+    G.rig.x += dx; G.rig.z += dz; updateRig(); G.racq.epoch++;
     if (te.pend) { te.pend = null; hudTee(); }           // moved by the game: this recovery is not rated
+    if (G.menuOpen) { G.menuC[0] += dx; G.menuC[2] += dz; placeMenu(); }      // a side picked in the menu: the menu comes along
   }
   te.home = true; te.anchor = [st[0], st[1]];
 }
@@ -4009,7 +4098,7 @@ function seqRallyEnd() {
   q.recs.push(rec); q.shot++;
   if (scored) {
     if (sh && G.hit && sh.id === G.nk.id) { if (sh.seqPts !== undefined) rec.pts = sh.seqPts; else sh.seqRec = rec; }
-    else { rec.pts = 0; showMain('Not hit', '#ffb347', { pts: 0 }); board.set(undefined, undefined, ptsTxt(0)); }
+    else { rec.pts = 0; shotNew(); showMain('Not hit', '#ffb347', { pts: 0 }); board.set(undefined, undefined, ptsTxt(0)); }
   }
   if (q.shot >= b.n) { q.nextAt = G.time + Math.max(1.6, S.gap); G.nextFeedAt = Infinity; }   // block over: a pause, then the next one
 }
@@ -4041,7 +4130,7 @@ function seqSummary() {
     `${Math.round(100 * t.tot / t.max)} %   ·   ${t.n3} × 3   ·   ${t.n2} × 2   ·   ${t.n1} × 1`,
     ...(B.length <= 6 ? [B.map((b, i) => `${blockName(b, true)} ${t.per[i].m ? t.per[i].p : '–'}`).join('  ·  ')] : [groupLine(grp), groupLine(fds.slice(0, half)), groupLine(fds.slice(half))])]
     : ['no shots at a target'] });
-  if (t.kmh) hud.set('speed', { num: String(t.kmh), color: '#ffffff', tag: 'average of the drill' });
+  if (t.kmh) hud.set('speed', { num: String(t.kmh), color: '#ffffff', tag: 'average of the drill', prev: [] });
   hudTee();
   const legend = allDrive ? '3 = drive 85+ (great)  ·  2 = drive 70+ (good)  ·  1 = drive 50+'
     : `3 = nick or within ${cmTxt(np.near3)} cm (tight boast, great drive) · 2 = within ${cmTxt(np.near2)} cm · 1 = within ${cmTxt(np.near1)} cm`;
@@ -4454,13 +4543,24 @@ function showMain(text, color, o) {
   if (o !== false) { hudShot(text, color, o); hudDrill(); }       // the drill box with it: the points have just changed
 }
 function hudShot(title, color, o) {
-  hud.set('shot', { cap: (o && o.cap) || 'Last shot', title: title || '', color: color || '#ffffff', pts: o && o.pts !== undefined && o.pts !== null ? o.pts : null,
-    lines: ((o && o.lines) || []).map(l => l || '') });
+  const cap = (o && o.cap) || 'Last shot', last = cap === 'Last shot' && !G.replay;
+  const m = { cap, title: title || '', color: color || '#ffffff', pts: o && o.pts !== undefined && o.pts !== null ? o.pts : null, lines: ((o && o.lines) || []).map(l => l || '') };
+  // what this shot leaves behind when the next one comes: its headline, its points, and one short line
+  if (last && m.title) G.shots.cur = { title: m.title, color: m.color, pts: m.pts, line: (o && o.brief) || (m.lines[0] || '').replace(/\s+/g, ' ') };
+  m.prev = last ? G.shots.log.slice(0, 2) : [];             // the two shots before, beside the last one
+  hud.set('shot', m);
+}
+// a new shot begins (a hit, or a feed let go): the one shown until now joins the two kept to compare with
+function shotNew() {
+  const s = G.shots;
+  if (s.cur) { s.log.unshift(s.cur); if (s.log.length > 2) s.log.length = 2; s.cur = null; }
 }
 // the speed box: the shot just hit (amber off the frame, light blue when the catch zone brought it onto the strings)
 function hudSpeed(info) {
-  const t = seqOn() ? seqTotals().kmh : 0, best = Math.round(G.stats.best * 3.6);
-  hud.set('speed', { num: String(Math.round(info.speed * 3.6)), color: info.frame ? '#ffb347' : info.assisted ? '#bfe3ff' : '#ffffff',
+  const t = seqOn() ? seqTotals().kmh : 0, best = Math.round(G.stats.best * 3.6), sp = G.shots.sp;
+  sp.unshift({ num: String(Math.round(info.speed * 3.6)), color: info.frame ? '#ffb347' : info.assisted ? '#bfe3ff' : '#ffffff' });
+  if (sp.length > 3) sp.length = 3;
+  hud.set('speed', { num: sp[0].num, color: sp[0].color, prev: sp.slice(1),       // the two shots before, under the last one
     tag: info.frame ? 'off the frame' : info.assisted ? 'with the hit assist' : seqOn() ? (t ? `average ${t}` : '') : (best ? `best ${best}` : '') });
 }
 const SOFT_NOTE = ['short swing assist off', 'short swing assist: slow swings only', ''];
@@ -4530,7 +4630,11 @@ const teeOn = () => S.tee !== 'off' && drillNow() !== 'free';
 const teePct = () => { const te = G.tee, p = te.pend, n = te.n + (p ? 1 : 0); return n ? Math.round(100 * (te.sum + (p ? p.e : 0)) / n) : null; };
 const teeLevel = (e) => (e >= 0.8 ? 2 : e >= 0.4 ? 1 : 0);
 // a new drill (or the same from its start): the rating, the rally count and the speed box start afresh
-function teeReset() { const te = G.tee; te.pend = null; te.sum = 0; te.n = 0; te.last = -1; te.home = false; te.anchor = null; G.rally.n = 0; hud.set('speed', { num: '', color: '#ffffff', tag: '' }); hudTee(); }
+function teeReset() {
+  const te = G.tee; te.pend = null; te.sum = 0; te.n = 0; te.last = -1; te.home = false; te.anchor = null; te.hist = []; G.rally.n = 0;
+  G.shots.cur = null; G.shots.log = []; G.shots.sp = [];
+  hud.set('speed', { num: '', color: '#ffffff', tag: '', prev: [] }); hudTee();
+}
 // the spot to go back to: from the drill's hitting spot (before the feeds are known: from where you stand)
 function teeSpot() {
   const st = G.stance || [head.p[0], head.p[2]], dx = TEE[0] - st[0], dz = TEE[1] - st[1], d = Math.hypot(dx, dz);
@@ -4555,20 +4659,23 @@ function teeTrack() {            // every frame of play
 function teeFinish() {
   const te = G.tee, p = te.pend; if (!p) return;
   te.pend = null; te.sum += p.e; te.n++; te.last = p.level;
+  te.hist.unshift({ level: p.level, pct: Math.round(100 * p.e) }); if (te.hist.length > 3) te.hist.length = 3;
   hudTee();
 }
 // the box: back to the T in the drills; in free play the rally (shots in a row)
 function hudTee() {
   if (drillNow() === 'free') {
     const r = G.rally;
-    hud.set('tee', { cap: 'Rally', label: r.n ? `${r.n} shot${r.n === 1 ? '' : 's'}` : '', level: -1, big: r.best ? `best ${r.best}` : '', sub: 'shots in a row' });
+    hud.set('tee', { cap: 'Rally', label: r.n ? `${r.n} shot${r.n === 1 ? '' : 's'}` : '', level: -1, big: r.best ? `best ${r.best}` : '', sub: 'shots in a row', prev: [] });
     return;
   }
   const te = G.tee, p = te.pend, pct = teePct(), over = seqOn() && G.sq.done;
   const level = over ? (pct === null ? -1 : teeLevel(pct / 100)) : p ? p.level : te.last;
   const n = te.n + (p ? 1 : 0);
+  // the two recoveries before the one on top (the one under way, or the last one rated)
+  const prev = over ? [] : p ? te.hist.slice(0, 2) : te.hist.slice(1, 3);
   hud.set('tee', { cap: 'Back to the T', label: level < 0 ? '' : TEE_WORD[p && !over ? 0 : 1][level], level, big: pct === null ? '' : `${pct} %`,
-    sub: n ? `${over ? 'this drill, ' : 'average of '}${n} shot${n === 1 ? '' : 's'}` : 'after each shot' });
+    sub: n ? `${over ? 'this drill, ' : 'average of '}${n} shot${n === 1 ? '' : 's'}` : 'after each shot', prev });
 }
 function refreshHud() {
   hudDrill(); hudTee();
@@ -4645,7 +4752,7 @@ function onImpact(e) {
     G.bounces++;
     if (played && !G.front) return endRally('DOWN', '#ffb347');
     if (played && G.front && G.bounces === 1) {
-      if (G.plain && !G.replay) hudShot(hud.shot.title, hud.shot.color, { lines: [`First bounce ${e.z.toFixed(1)} m from the front wall`] });
+      if (G.plain && !G.replay) hudShot(hud.shot.title, hud.shot.color, { lines: [`First bounce ${e.z.toFixed(1)} m from the front wall`], brief: `First bounce at ${e.z.toFixed(1)} m` });
       if (S.showBounce) { G.markers.push({ p: [e.x, 0, e.z], t: G.time }); if (G.markers.length > 8) G.markers.shift(); }
       if (e.corner >= SURF.BACK && e.corner <= SURF.RIGHT) G.nick = { t: phys.time, ok: true };
     }
@@ -4689,7 +4796,7 @@ function onRacquetEnd(info) {
   G.stats.shots++;
   if (info.speed > G.stats.best) G.stats.best = info.speed;
   if (S.showSpeed) showMain(`${Math.round(info.speed * 3.6)} km/h${info.assisted ? ' (assist)' : ''}`, info.frame ? '#ffb347' : info.assisted ? '#bfe3ff' : '#ffffff', false);
-  hudSpeed(info); hudShot('', '#ffffff'); G.plain = false;      // the speed in its box; the last-shot box waits for what this shot does
+  hudSpeed(info); shotNew(); hudShot('', '#ffffff'); G.plain = false;      // the speed in its box; the last-shot box waits for what this shot does
   if (info.assisted) G.stats.assisted = (G.stats.assisted || 0) + 1;
   if (G.ball !== 'play') { G.ball = 'play'; }
   if (!G.hit) G.rallySp = info.speed;          // the rally's first hit: its speed for the sequence averages
@@ -4871,7 +4978,9 @@ function processControls(dt) {
   if (G.adjust) { adjustControls(dt); return; }
   // menu toggle
   if (pressed(rh, 5) || pressed(bh, 5)) { toggleMenu(); return; }
-  if (G.menuOpen) return;
+  // with the menu open the game is paused, but the stick still moves you (v1.26): the way to put the court where your
+  // room has space, in the middle of a drill; the menu comes along
+  if (G.menuOpen) { stickMove(dt, rh, bh); return; }
   // ball-hand stick click: replay the last hit (again: stop the replay)
   if (pressed(bh, 3)) { if (G.replay) endReplay(); else replayLastHit(); return; }
   // recall / feed now
@@ -4894,22 +5003,8 @@ function processControls(dt) {
   }
   // locomotion with one stick (the racquet hand's by default, v1.14; the ball hand's as before if chosen in the menu),
   // snap turn and racquet tilt with the other
-  const mh = S.moveHand === 'ball' ? bh : rh, th = mh === rh ? bh : rh;
-  if (S.moveStick && mh.on) {
-    const x = mh.ax[0], y = mh.ax[1];
-    const m = Math.hypot(x, y);
-    if (m > 0.2) {
-      const sp = 1.8 * (m - 0.2) / 0.8 * dt / m;
-      const f = head.fwd; const fl = Math.hypot(f[0], f[2]) || 1;
-      const fx = f[0] / fl, fz = f[2] / fl;
-      let dx = (-y * fx + x * -fz) * sp, dz = (-y * fz + x * fx) * sp;
-      const W2 = COURT.W / 2;
-      const nx = head.p[0] + dx, nz = head.p[2] + dz;
-      if (nx < -W2 + 0.25 || nx > W2 - 0.25) dx = 0;
-      if (nz < 0.3 || nz > COURT.L - 0.25) dz = 0;
-      G.rig.x += dx; G.rig.z += dz; updateRig();
-    }
-  }
+  stickMove(dt, rh, bh);
+  const th = S.moveHand === 'ball' ? rh : bh;
   if (th.on) {
     const x = th.ax[0], y = th.ax[1];
     if (Math.abs(x) > 0.75 && Math.abs(x) > Math.abs(y) && !G.turnLatch) { G.turnLatch = true; snapTurn(x > 0 ? -Math.PI / 6 : Math.PI / 6); }
@@ -4918,6 +5013,26 @@ function processControls(dt) {
       showMain(`Racquet tilt ${S.grip.a > 0 ? '+' : ''}${Math.round(S.grip.a)}°`, '#9fd3ff', { cap: 'Racquet' });
     }
     else if (Math.abs(x) < 0.3 && Math.abs(y) < 0.3) G.turnLatch = false;
+  }
+}
+function stickMove(dt, rh, bh) {
+  const mh = S.moveHand === 'ball' ? bh : rh;
+  if (!S.moveStick || !mh.on) return;
+  const x = mh.ax[0], y = mh.ax[1];
+  const m = Math.hypot(x, y);
+  if (m <= 0.2) return;
+  const sp = 1.8 * (m - 0.2) / 0.8 * dt / m;
+  const f = head.fwd; const fl = Math.hypot(f[0], f[2]) || 1;
+  const fx = f[0] / fl, fz = f[2] / fl;
+  let dx = (-y * fx + x * -fz) * sp, dz = (-y * fz + x * fx) * sp;
+  const W2 = COURT.W / 2;
+  const nx = head.p[0] + dx, nz = head.p[2] + dz;
+  if (nx < -W2 + 0.25 || nx > W2 - 0.25) dx = 0;
+  if (nz < 0.3 || nz > COURT.L - 0.25) dz = 0;
+  G.rig.x += dx; G.rig.z += dz; updateRig();
+  if (G.menuOpen) {
+    G.menuC[0] += dx; G.menuC[2] += dz; placeMenu();
+    if (G.tee.pend) { G.tee.pend = null; hudTee(); }     // the court moved under you while paused: that is not walking back to the T
   }
 }
 function snapTurn(a) {
@@ -4948,10 +5063,7 @@ function toggleMenu() {
   G.ignoreGrab = true; G.held = false;
   if (G.menuOpen) {
     if (G.adjust) toggleAdjust(false);
-    const yaw = Math.atan2(-head.fwd[0], -head.fwd[2]);
-    const d = 0.85;
-    G.menuTop = Math.max(1.55, head.p[1] + 0.33);
-    G.menuC = [head.p[0] - Math.sin(yaw) * d, 0, head.p[2] - Math.cos(yaw) * d]; G.menuYaw = yaw;
+    anchorMenu();
     buildMenu();
     audio.beep(660, 0.05, 0.12);
   } else {
@@ -4959,6 +5071,13 @@ function toggleMenu() {
     G.seqEdit = false;                          // the block editor opens closed next time
     if (tuneDirty) { tuneDirty = false; configureFeeds(); lastSolverT = phys.T; }   // feeds and targets with the new ball physics
   }
+}
+// the menu, 85 cm in front of where the player looks
+function anchorMenu() {
+  const yaw = Math.atan2(-head.fwd[0], -head.fwd[2]), d = 0.85;
+  G.menuTop = Math.max(1.55, head.p[1] + 0.33);
+  G.menuC = [head.p[0] - Math.sin(yaw) * d, 0, head.p[2] - Math.cos(yaw) * d]; G.menuYaw = yaw;
+  G.menuFollow = false;
 }
 function placeMenu() {
   // keep the top edge fixed; height follows the page content
@@ -5141,12 +5260,18 @@ function buildMenu() {
           near: 'Small room: after each shot, 0.5 m back towards the T (the ring) before the next ball',
           mid: 'Default: back to the T (the ring) after each shot, or 1 m towards it where the T is further',
           full: 'Always back to the T itself (the ring), however far: up to 3.5 m of floor in the solo drills' }[S.tee], false, null, { kind: 'value', small: true, info: true })]] },
-      { label: 'Move me to', items: [
-        btn('The T', false, () => placePlayer(TEE[0], TEE[1])),
-        btn('Front', false, () => placePlayer(0, 3.0)),
-        btn('Back left', false, () => placePlayer(-1.7, 8.3)),
-        btn('Back right', false, () => placePlayer(1.7, 8.3)),
-        btn(S.autoReturn ? 'Auto ball return: on' : 'Auto ball return: off', S.autoReturn, () => { S.autoReturn = !S.autoReturn; save(); }, { flex: 1.8, small: true })] },
+      // where you are in the court. The stick moves you with this menu open too (the game is paused): walk to where
+      // your room has space, then bring the court to you with the stick, or put the hitting spot under your feet.
+      { label: 'Move me  ·  or use the stick, also with this menu open', lines: [
+        [btn('The T', false, () => placePlayer(TEE[0], TEE[1])),
+          btn('Front', false, () => placePlayer(0, 3.0)),
+          btn('Back left', false, () => placePlayer(-1.7, 8.3)),
+          btn('Back right', false, () => placePlayer(1.7, 8.3))],
+        [...(drillNow() !== 'free' && G.stance ? [btn('Hitting spot here', false, () => { const st = G.stance; placePlayer(st[0], st[1]); G.tee.home = true; G.tee.anchor = [st[0], st[1]]; }, { flex: 1.2, kind: 'primary' })] : []),
+          btn({ menu: 'Room outline: with the menu', always: 'Room outline: always', off: 'Room outline: off' }[S.showRoom], S.showRoom !== 'off',
+            () => { S.showRoom = { menu: 'always', always: 'off', off: 'menu' }[S.showRoom]; save(); }, { flex: 1.5, small: true }),
+          btn(S.autoReturn ? 'Auto ball return: on' : 'Auto ball return: off', S.autoReturn, () => { S.autoReturn = !S.autoReturn; save(); }, { flex: 1.3, small: true })],
+        [btn(roomText(), false, null, { kind: 'value', small: true, info: true })]] },
     ];
     rows = prog === 'custom' && G.seqEdit ? [tabs, ...soloRows, ...seqRows(), bottom]
       : [tabs, ...soloRows, ...(prog === 'custom' ? seqRows() : []), ...optRows, bottom];
@@ -5410,7 +5535,7 @@ async function enterVR() {
   if (xr.session) return;
   audio.init();
   try {
-    const session = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor'] });
+    const session = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor', 'bounded-floor'] });
     xr.session = session;
     await gl.makeXRCompatible();
     xr.layer = makeLayer(session);
@@ -5420,10 +5545,12 @@ async function enterVR() {
     session.addEventListener('frameratechange', () => { if (G.menuOpen) buildMenu(); });
     try { xr.refSpace = await session.requestReferenceSpace('local-floor'); G.rig.y = 0; }
     catch (e) { xr.refSpace = await session.requestReferenceSpace('local'); G.rig.y = 1.6; }
+    xr.boundSpace = null; xr.room = null; xr.roomT = 0;
+    if (G.rig.y === 0) session.requestReferenceSpace('bounded-floor').then((sp) => { if (xr.session === session) xr.boundSpace = sp; }, () => {});   // the room's outline, if the headset gives it
     updateRig();
     setDrill(S.drill);
     session.addEventListener('end', () => {
-      xr.session = null; xr.refSpace = null; G.menuOpen = false; ui.btn.textContent = 'Enter VR'; requestAnimationFrame(desktopFrame);
+      xr.session = null; xr.refSpace = null; xr.boundSpace = null; xr.room = null; G.menuOpen = false; ui.btn.textContent = 'Enter VR'; requestAnimationFrame(desktopFrame);
       // what the refresh rate did, for anyone checking their headset
       const off = RR.list.length ? RR.list.map(rrRound).join(', ') + ' Hz' : 'no list';
       const evs = RR.log.map(e => e.text).slice(-3).join(' · ');
@@ -5443,7 +5570,7 @@ const scene = {
   ball: { on: false, p: G.pos, q: G.q, r: 0.02, prev: G.prev, blur: 0, dots: 1 },
   racquet: { on: false, m: G.racq.m, tint: [1, 1, 1, 1] },
   ghost: { on: false, m: M4.create() },
-  rings: [], dots: [], label: { on: false, tex: labelTex, m: M4.create(), alpha: 1 },
+  rings: [], lines: [], dots: [], label: { on: false, tex: labelTex, m: M4.create(), alpha: 1 },
   hint: { on: false, tex: hintTex, m: G.hintM, alpha: 1 },
   hand: { on: false, p: [0, 0, 0] },
   markers: [], feeder: G.feeder,
@@ -5480,6 +5607,7 @@ function onXRFrame(time, frame) {
   if (!xr.placed) { xr.placed = true; G.tee.home = false; if (drillNow() !== 'free' && G.stance && S.autoPlace) autoPlace(G.stance); else placePlayer(0, 6.0); toWorldP(head.p, head.refP); }
   if (G.real - (xr.audioT || 0) >= 0.011) { xr.audioT = G.real; audio.setListener(head.p, head.fwd, head.up); }   // ~90 Hz is plenty for sound
   readInputs(frame, xr.refSpace);
+  if (xr.boundSpace && G.real - xr.roomT >= 0.5) { xr.roomT = G.real; const had = !!xr.room; readRoom(frame); if (G.menuOpen && had !== !!xr.room) buildMenu(); }
   update(dt);
   // ---- render ----
   if (window.__squashNoRender) { G.cpuMs = G.cpuMs * 0.9 + (performance.now() - t0) * 0.1; return; }   // tests: long simulated sessions
@@ -5499,6 +5627,7 @@ function onXRFrame(time, frame) {
 
 // ---------------------------------------------------------------- nick target visuals
 const ringPool = []; for (let i = 0; i < 16; i++) ringPool.push({ m: M4.create(), col: [1, 1, 1], a: 0, mode: 1 });
+const linePool = []; for (let i = 0; i < 40; i++) linePool.push({ m: M4.create(), col: [0.10, 0.62, 1.0], a: 0.9 });      // the room outline's sides
 const dotPool = []; for (let i = 0; i < 140; i++) dotPool.push({ p: [0, 0, 0], r: 0.011, a: 0, col: [0, 0, 0] });
 const Q_FRONT = [Math.SQRT1_2, 0, 0, Math.SQRT1_2];            // disc normal (+Y) -> +Z (front wall)
 const Q_LEFT = [0, 0, -Math.SQRT1_2, Math.SQRT1_2], Q_RIGHT = [0, 0, Math.SQRT1_2, Math.SQRT1_2];
@@ -5607,6 +5736,7 @@ function update(dt) {
   // menu interaction
   scene.laser.on = false; scene.laser.dot = null;
   if (G.menuOpen) {
+    if (G.menuFollow) { anchorMenu(); placeMenu(); }
     const ptr = menuPointer();
     const hov = ptr ? menu.hit(ptr.u, ptr.v) : -1;
     if (hov !== menu.hover) { menu.hover = hov; menu.dirty = true; }
@@ -5667,10 +5797,23 @@ function update(dt) {
     const tp = G.tee.pend;
     if (tp) pushRing(Q_FLOOR, [tp.c[0], 0.004, tp.c[1]], TEE_R + 0.06, TEE_COL[Math.max(0, tp.level)], 0.85, 3);
     else if (G.stance) { const c = teeSpot(); pushRing(Q_FLOOR, [c[0], 0.004, c[1]], TEE_R + 0.06, TEE_IDLE, 0.40, 3); }
-    // ... and, once you have left it, a small mark where the feeds are played from, to come back to
-    if (G.stance) {
-      const far = Math.hypot(head.p[0] - G.stance[0], head.p[2] - G.stance[1]);
-      if (far > 0.45) pushRing(Q_FLOOR, [G.stance[0], 0.004, G.stance[1]], 0.17, TEE_IDLE, 0.55 * Math.min(1, (far - 0.45) / 0.2), 1);
+  }
+  // a small mark where the feeds are played from: once you have left it for the T, to come back to; and with the
+  // menu open, to see where the court is in your room while you move it
+  if (G.stance && drillNow() !== 'free' && !G.replay && (teeOn() || G.menuOpen)) {
+    const far = Math.hypot(head.p[0] - G.stance[0], head.p[2] - G.stance[1]), from = G.menuOpen ? 0.2 : 0.45;
+    if (far > from) pushRing(Q_FLOOR, [G.stance[0], 0.004, G.stance[1]], 0.17, TEE_IDLE, (G.menuOpen ? 0.8 : 0.55) * Math.min(1, (far - from) / 0.2), 1);
+  }
+  // the room's play area, outlined on the floor (the menu's Room outline)
+  scene.lines.length = 0;
+  if (roomOn()) {
+    const R0 = xr.room, n = R0.length, a = [0, 0, 0], b = [0, 0, 0];
+    for (let i = 0; i < n && i < linePool.length; i++) {
+      toWorldP(a, { x: R0[i][0], y: 0, z: R0[i][1] }); toWorldP(b, { x: R0[(i + 1) % n][0], y: 0, z: R0[(i + 1) % n][1] });
+      const dx = b[0] - a[0], dz = b[2] - a[2], len = Math.hypot(dx, dz), th = Math.atan2(-dx, -dz), ln = linePool[i];
+      M4.fromQT(ln.m, [0, Math.sin(th / 2), 0, Math.cos(th / 2)], [a[0], 0.007, a[2]]);
+      for (let k = 0; k < 3; k++) { ln.m[k] *= 0.035; ln.m[4 + k] *= 0.004; ln.m[8 + k] *= len; }
+      scene.lines.push(ln);
     }
   }
   // the wall boxes: the drill and debug boxes follow the game a few times a second, the others change with the events
@@ -5843,7 +5986,7 @@ function hudStrip() {
   let x = gap; for (const pn of on) { g.drawImage(hud.box[pn.key].canvas, x, gap); x += hud.box[pn.key].canvas.width + gap; }
   return c;
 }
-window.__squash = { hud, hudFlush, hudStrip, scene, TEE, teeReset, head, nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
+window.__squash = { anchorMenu, readRoom, roomText, shotNew, hud, hudFlush, hudStrip, scene, TEE, teeReset, head, nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
   toggleMenu, TUNE_SPEC, setTune, resetTune, dropTest, dropDemo, testShot, replayLastHit, endReplay, onSolverMsgs: () => solverLog, RR, applyFrameRate,
   seqRestart, seqTotals, seqLine, seqDefault, seqPlusDefault, seqLenDefault, nickPtsValid, nickPoints, drillNow, sideNow,
   pickProg, pickSolo, HIST, whenTxt, PROG_NAME, SURF, COURT, RQ };

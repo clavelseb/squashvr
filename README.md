@@ -59,6 +59,8 @@ Five boxes hang in a row above the out line:
 - **Back to the T:** how well you went back to the T after your last shot (next section). In free play it counts the shots of your rally instead, and keeps your best.
 - **Debug** (far right, only with Show: FPS on): the real refresh rate, the time a frame takes and the share of late frames.
 
+**The last three shots.** The Speed, Last shot and Back to the T boxes keep the two shots before the last one, so you can compare: the last shot is the largest, the one before is smaller under it (in the Last shot box: beside it, under "Before"), and the one before that is smaller and fainter still. For each you see its speed, its result with the points it earned, and how well you went back to the T. A new drill starts the three afresh, and the result at the end of a drill is shown on its own.
+
 ## Back to the T
 
 In squash you go back to the T after every shot. In the drills with a feed, the game now rates how well you do it:
@@ -76,6 +78,12 @@ In squash you go back to the T after every shot. In the drills with a feed, the 
 - **To the T:** always the T itself, however far. From the back corners that's about 3 m, so it needs a large room.
 - **Off:** no rating, no ring, and the box comes down.
 
+**Fitting the court to your room.** A web page can't make the headset show its boundary, but there are three ways to put the court where your room has space, at any time, in the middle of a drill too. Open the menu (the game is paused while it's open), then:
+
+- **Move with the stick.** The stick that moves you works with the menu open as well, and the menu comes along. Walk to where you want to play from, then slide the court under you.
+- **Hitting spot here** (Solo & options, in the Move me row): puts the drill's hitting spot under your feet, wherever you stand.
+- **Room outline:** if the headset's browser gives the page its play area, the game draws its outline in blue on the floor, so you can see where your room is in the court. It's shown while the menu is open; the button next to Hitting spot here sets it to always or off. On Quest this is the rectangle of your play area, not the exact boundary you drew, and with a stationary boundary there may be none: the line under the buttons says what the headset gave. A small mark on the floor shows the hitting spot while the menu is open.
+
 **Where the game puts you.** With back to the T on, you're placed on the hitting spot once, when the drill starts: stand where you have room to walk about 1.2 m back to your left and to your right. For the later blocks the court is moved so that the hitting spot stays at the same place in your room, wherever you happen to be standing; in the main drills that only happens when the side changes, and the T is then on your other side. With back to the T off, you're put back on the hitting spot at the start of every block, as before.
 
 ---
@@ -90,7 +98,8 @@ In squash you go back to the T after every shot. In the drills with a feed, the 
   - **History**, under the two drills: the last 10 drills you played to the end (main drills or custom sequence), newest first, with the points, the score, the average speed of your shots, your back-to-the-T score and how many shots scored 3, 2 and 1, and a star on your best of each drill. Tap one for its breakdown by shot and by kind of feed (score and average speed), and the ball it was played with; tap it again to close it.
 - **Solo & options:**
   - **Solo drills:** Free play, Lob serve, Hard serve, Volley feed, Loose ball, Boast feed, Boast practice and Drive practice, each with its feed side (forehand, backhand or both sides, every other feed) and target. **Custom sequence** (the old Alternate) is a sequence of your own, by default 10 backhand crosscourt nicks, 10 backhand straight nicks, then the same on the forehand.
-  - The time between feeds, the ball type and temperature, **Back to the T** (off, up to 0.5 m, up to 1 m, to the T) and where you stand.
+  - The time between feeds, the ball type and temperature, and **Back to the T** (off, up to 0.5 m, up to 1 m, to the T).
+  - **Move me:** to the T, the front or a back corner; **Hitting spot here**; the **Room outline** (with the menu, always, off). The stick moves you with the menu open too.
 - **Racquet & settings:**
   - Racquet hand and grip, and racquet tilt, lean, face angle and distance from your hand.
   - **Hit assist:** a catch zone of 3, 6 or 10 cm around the strings, and **Perfect hits**, which plays every hit from the sweet spot. Both are on by default at the largest setting (10 cm); turn them down or off as your hitting improves.
