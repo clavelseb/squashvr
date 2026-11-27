@@ -2,7 +2,7 @@
 
 A solo squash training game that runs in a VR headset's web browser (WebXR). You don't install anything: it's one HTML file, served by GitHub Pages. `index.html` and `squash-vr.html` are the same game; `index.html` just gives it the shorter address.
 
-You get a regulation 9.75 × 6.40 m court, a ball that behaves like a warm double-yellow, a ball machine with drills, and targets for nicks, boasts, drives, drops, kills and lobs. Four main drills (nick shots, straight length, the front court and the back court) are scored, and every one you finish is kept in the history.
+You get a regulation 9.75 × 6.40 m court, a ball that behaves like a warm double-yellow, a coach who feeds you in the drills, and targets for nicks, boasts, drives, drops, kills and lobs. Four main drills (nick shots, straight length, the front court and the back court) are scored, and every one you finish is kept in the history.
 
 **What you need:**
 - A standalone VR headset whose browser supports WebXR.
@@ -60,6 +60,17 @@ Five boxes hang in a row above the out line:
 - **Debug** (far right, only with Show: FPS on): the real refresh rate, the time a frame takes and the share of late frames.
 
 **The last three shots.** The Speed, Last shot and Back to the T boxes keep the two shots before the last one, so you can compare: the last shot is the largest, the one before is smaller under it (in the Last shot box: beside it, under "Before"), and the one before that is smaller and fainter still. For each you see its speed, its result with the points it earned, and how well you went back to the T. A new drill starts the three afresh, and the result at the end of a drill is shown on its own.
+
+## The coach who feeds you
+
+Since v1.35 the balls aren't fired by an invisible machine: a coach plays them to you with her racquet. She moves with real motion capture (a standing idle and two swings, right to left and left to right), and her voice is the one that reads out the blocks and results.
+
+- **Every feed is her hit.** Her swing starts about 1.2 s before the feed is due, and the ball leaves her racquet at the moment of contact. The feeds themselves are unchanged: same place, same speed, same targets. She stands so that her racquet meets the ball where the feed starts, turned so that it swings the way the ball goes. She plays whichever of the two swings keeps her clear of the walls and of you, and meets the ball a little earlier or later in the swing to match its height (0.6 m for the drop feed, 1.2 m for the hard serve).
+- **Where she stands:** where the drill's feeds come from: behind you for the volley feeds, on the T or beside it for the back court drill, in the back corner for the boast and drop feeds. Between blocks she glides to the next spot, or appears there if it's far.
+- **Where she looks:** at you when she talks (a new block, a result, what to work on), and she turns towards you between feeds if she has her back to you. While she feeds she looks at the front wall where her ball is going. She watches the ball come back to you and you hit it, then looks at your shot's target on the front wall, then back at you.
+- **Her looks**, on the Racquet & settings tab under **Coach**: **Cartoon** (the default: two flat tones and an ink outline), **Comic** (printed colours and halftone dots), **Chrome** (a moving mirror of the court), **Glass**, **Neon** (a dark figure drawn by glowing edges) and **Hologram**. **Off** brings back the blue mark on the floor where the feeds come from.
+- **Cost:** she is one model of about 3,400 triangles (1,400 for Neon), drawn in one or two passes per eye. Working out her pose takes under 0.2 ms a frame, so the 240 Hz target isn't at risk.
+- Her hair is in a chignon, so nothing swings when she moves.
 
 ## What you hear: the voice
 
@@ -161,6 +172,7 @@ Nothing is shown shot by shot. **At the end of a main drill** (or a custom seque
     - **Slow swings + timing** (the default): also, a hit is played at the top speed the strings reached within 35 ms before or after the ball met them. A short swing is only fast for a few hundredths of a second; with this setting it gives the same shot whether you meet the ball a little early or a little late. The help is complete up to about 22 km/h of racquet speed and fades out by 43 km/h, so a full swing is not changed at all. The trade-off: braking in the last instant before the ball no longer takes pace off it. For a softer shot, swing more slowly, or give with the ball.
     - The Drill box on the front wall says so when the setting isn't the default.
     - The engine fix that came with this switch in v1.24 is now always on: a fast ball that caught the edge of the head of a slow or still racquet could stay on it until the racquet snapped back to your hand, and be thrown off at an impossible speed. Such a hit now ends as the mishit it is.
+  - **Coach:** her look (Cartoon, Comic, Chrome, Glass, Neon, Hologram) or Off. See "The coach who feeds you" above.
   - **Voice:** blocks and every shot (the default), blocks only, or off. See "What you hear" above.
   - Display options, sound and haptics, and which stick moves you: the racquet hand's (the default) or the ball hand's. The other stick turns you 30° and tilts the racquet.
   - **Refresh rate:** **Max** (the default) uses the highest rate the browser offers and steps down if frames start dropping, retrying the higher rate later. **72**, **90** and **120** fix a rate. On Quest 3, **207** and **240** ask the browser for those rates; the info line underneath says what happened (offered, not offered, or set in developer mode). Turn on **FPS** under Show to see the real rate, the time each frame takes and the share of late frames.
