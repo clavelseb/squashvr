@@ -71,6 +71,7 @@ Since v1.35 the balls aren't fired by an invisible machine: a coach plays them t
 - **Where she looks:** at you when she talks (a new block, a result, what to work on), and she turns towards you between feeds if she has her back to you. While she feeds she looks at the front wall where her ball is going. She watches the ball come back to you and you hit it, then looks at your shot's target on the front wall, then back at you.
 - **Her looks**, on the Racquet & settings tab under **Coach**: **Cartoon** (the default: two flat tones and an ink outline), **Comic** (printed colours and halftone dots), **Chrome** (a moving mirror of the court), **Glass**, **Neon** (a dark figure drawn by glowing edges) and **Hologram**. **Off** brings back the blue mark on the floor where the feeds come from.
 - **Cost:** she is one model of about 3,400 triangles (1,400 for Neon), drawn in one or two passes per eye. Working out her pose takes under 0.2 ms a frame, so the 240 Hz target isn't at risk.
+- **Her voice comes from her** (v1.37): from her mouth, wherever she is, through the headset's 3D sound like the ball's. Turn your head and it moves from one ear to the other. It's quieter the further away she is (about 7 dB between 1.5 m and 7 m) and duller when she speaks facing away. A little of the court's echo is in it, more when she's far. With the coach off, the voice is a narrator again, the same in both ears.
 - Her hair is in a chignon, so nothing swings when she moves.
 
 ## What you hear: the voice
