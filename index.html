@@ -104,7 +104,7 @@
       <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the straight-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each solo drill can be set to crosscourt nick, straight nick, boast, straight drive, straight drop, straight kill, crosscourt drive, crosscourt length, straight lob, crosscourt lob or no target.</p>
       <p class="lede" style="margin-top:10px">The four <strong>main drills</strong> each run a sequence of blocks, the first two off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. The <strong>Front court drill</strong> (120 shots) feeds a straight drop from the back corner on your side, which you take low in the front court and answer six ways, 10 of each on the backhand and then the forehand: counter drop, straight drive, crosscourt drive (hard and low), straight lob, crosscourt lob and crosscourt nick. Each has its target on the front wall; drops, crosscourt drives and lobs are rated on where the ball goes (a drop on how short, low and tight it is, a crosscourt drive on length, width and height on the front wall, a lob on its height over the T line, its length and how close to the side wall it lands), with the same 3, 2 and 1 points. The <strong>Back court drill</strong> (160 shots) feeds straight drives from the T (or beside it, near the side wall), and you play from the back, eight exercises of 10, all on the backhand and then all on the forehand: a straight drive; the same off the back wall (an overhit feed that you let come out); a crosscourt length (to die in the far back corner, touching the side wall behind the service box or not at all); boasts off a deep drive that sits up in the corner; a straight drop; the same off the back wall; a straight kill off a loose, short length (low and hard, to die before the service box); and a crosscourt lob off a hard, low length. The feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The menu opens on the main drills, with the <strong>history</strong> under them: every drill played to the end, 10 to a page, with the score, the average speed of your shots, your back-to-the-T and watching-the-ball scores and the breakdown by shot and by kind of feed. The solo drills, the <strong>Custom sequence</strong> (a sequence of your own), the ball and the other options are on the <strong>Solo &amp; options</strong> tab.</p>
       <p class="lede" style="margin-top:10px">Five boxes on the front wall follow your play: the <strong>drill</strong> (block, shot, points), the <strong>speed</strong> of your last shot, the <strong>last shot</strong> (its result, the points it earned and the details), <strong>back to the T</strong>, and a debug box (refresh rate and frame time) when Show: FPS is on. The speed, last-shot and back-to-the-T boxes keep the two shots before the last one, smaller, to compare.</p>
-      <p class="lede" style="margin-top:10px"><strong>The coach.</strong> In the drills a motion-captured coach feeds you: she holds the next ball in her left hand, throws it up onto her racquet, and it leaves her racquet at the moment of her swing's hit, from where the drill's feeds come from. Her voice comes from where she stands, in 3D sound. She looks at you when she talks, at the front wall where her feed goes, at the ball as you hit it and at your shot's target. Racquet &amp; settings sets her look: Cartoon, Comic, Chrome, Glass, Neon or Hologram, or Off.</p>
+      <p class="lede" style="margin-top:10px"><strong>The coach.</strong> In the drills a motion-captured coach feeds you: she holds the next ball in her left hand, throws it up onto her racquet, and it leaves her racquet at the moment of her swing's hit, from where the drill's feeds come from. Her voice comes from where she stands, in 3D sound. She looks at you when she talks, at the front wall where her feed goes, at the ball as you hit it and at your shot's target. Racquet &amp; settings sets her look (Cartoon, Comic, Chrome, Glass, Neon or Hologram, or Off) and her voice level.</p>
       <p class="lede" style="margin-top:10px"><strong>The voice.</strong> In a main drill or a custom sequence a voice reads out each block as it starts (the first ball waits for it), each shot's result, with its points only where the result doesn't tell them (&ldquo;Great drive!&rdquo;, &ldquo;Too loose. One point.&rdquo;; a nick shot that missed: &ldquo;So close!&rdquo;, &ldquo;Twenty centimetres short.&rdquo; or &ldquo;Missed.&rdquo;), and at the end of a block what to work on: &ldquo;Make more effort to go back to the T!&rdquo; if you covered less than half the way back on average, &ldquo;Make more effort to watch the ball!&rdquo; if you watched it less than 50&nbsp;%. Racquet &amp; settings sets it to blocks and every shot, blocks only, or off. The phrases are a recording that comes with the page, spoken by an open-source neural voice (Kokoro), since the headset's browser has no speech of its own.</p>
       <p class="lede" style="margin-top:10px"><strong>Back to the T.</strong> After each shot in a drill, a ring on the floor shows where to go back to: red, then yellow, then green as you get there, and the box on the wall says Go back, Closer or Excellent. You are rated on how much of the way you covered before the next ball leaves (all the way 100 %, staying where you hit 0 %), and the drill ends with your back-to-the-T score, kept in the history. By default the ring is the T itself in the main drills (1.2 m from the hitting spot) and a metre towards it in the drills played from further back; Solo &amp; options sets it to up to 0.5 m, always the T, or off. In free play the box counts the shots of your rally.</p>
       <p class="lede" style="margin-top:10px"><strong>Watching the ball.</strong> The drills feed the ball from behind you, so you should be looking back at the feeder as it leaves. Each feed is rated from how far your head is turned: 0 % facing the front wall, 100 % turned to where the ball comes from. Nothing is shown shot by shot; the drill's result gives the percentage, and it is kept in the history.</p>
@@ -4479,7 +4479,7 @@ const VOICE_DATA = { rate: 24000, length: 187.315,
 // =====================================================================
 const VOICE_GAP = 0.15;      // s between two phrases said one after the other, as between two sentences (each also has 30 ms of silence at its ends)
 class SoundEngine {
-  constructor() { this.ctx = null; this.vol = 0.8; this.last = {}; this.vx = null; }
+  constructor() { this.ctx = null; this.vol = 0.8; this.voiceVol = 0.6; this.last = {}; this.vx = null; }
 
   init() {
     if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
@@ -4518,8 +4518,8 @@ class SoundEngine {
     //           -> dry: straight on (no coach) ----------------------------------------------------------> voiceOut
     //           -> the court's echo, taken before the panner: the same wherever she is, so a voice further away
     //              is more echoing, as in a real court
-    this.voiceIn = ctx.createGain();
-    this.voiceOut = ctx.createGain(); this.voiceOut.gain.value = 1.0; this.voiceOut.connect(this.master);
+    this.voiceIn = ctx.createGain(); this.voiceIn.gain.value = this.voiceVol;        // the voice's level (v1.38), before the echo is taken
+    this.voiceOut = ctx.createGain(); this.voiceOut.gain.value = 1; this.voiceOut.connect(this.master);
     const vp = this.voicePan = ctx.createPanner();
     vp.panningModel = 'HRTF'; vp.distanceModel = 'inverse'; vp.refDistance = 2.0; vp.rolloffFactor = 0.5; vp.maxDistance = 40;
     vp.coneInnerAngle = 140; vp.coneOuterAngle = 320; vp.coneOuterGain = 0.55;            // speech carries forward
@@ -4579,6 +4579,8 @@ class SoundEngine {
   }
 
   setVolume(v) { this.vol = v; if (this.master) this.master.gain.value = v; }
+  // the voice against the other sounds (v1.38; 1 = v1.37's level)
+  setVoiceVolume(v) { this.voiceVol = v; if (this.voiceIn) this.voiceIn.gain.setTargetAtTime(v, this.ctx.currentTime, 0.03); }
 
   // Where the voice comes from: p her mouth, f the way she faces (court metres), or p null for a narrator's voice.
   // Called with the listener (~90 Hz); positions glide over 20 ms so a moving coach makes no clicks.
@@ -5077,7 +5079,7 @@ function tinSignCanvas(wallW, tinH) {
 
 
 
-const VERSION = '1.37';
+const VERSION = '1.38';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -5147,6 +5149,7 @@ const DEFAULTS = {
   ball: 'dy', temp: 'w50', grip: { a: 0, b: 0, c: 0, hx: 0, hy: 0, hz: HZ0 }, showSpeed: true, showBounce: true, blur: true, showFps: false,
   fps: 'max', quality: 'normal', vol: 0.8, haptics: 1.0, autoReturn: true, moveStick: true, moveHand: 'racquet', assist: 'large', assistPerfect: true,
   coach: 'cartoon',                // the coach who feeds you (v1.35): her look ('cartoon', 'comic', 'chrome', 'glass', 'neon', 'hologram') or 'off'
+  voiceVol: 0.6,                   // the voice's level against the other sounds (v1.38: 0.6, 4.4 dB under v1.37's)
   voice: 'all',                    // the voice (v1.32): 'all' each block, each shot's result and what to work on; 'blocks' not the shots; 'off'
   tune: {}, replaySpeed: 0.5,      // ball physics overrides (Ball tab: only values changed from the defaults), replay / test-shot speed
   // short swing assist (Racquet tab; a test switch in v1.24, on by default since v1.25): 0 off; 1 the hit assist also
@@ -5214,6 +5217,7 @@ const S = (() => {
   if (!['menu', 'always', 'off'].includes(o.showRoom)) o.showRoom = 'menu';
   if (!['all', 'blocks', 'off'].includes(o.voice)) o.voice = 'all';
   if (!COACH_IDS.includes(o.coach)) o.coach = 'cartoon';
+  o.voiceVol = Number.isFinite(+o.voiceVol) ? Math.max(0, Math.min(1.5, Math.round(+o.voiceVol * 10) / 10)) : 0.6;
   delete o.stringFix;                 // v1.22's test switch: the fix is part of the engine since v1.23
   return o;
 })();
@@ -5245,7 +5249,7 @@ if (!gl) { ui.status.textContent = 'WebGL 2 is not available in this browser.'; 
 const R = new Renderer(gl);
 const coach = new Coach(gl); coach.setLook(S.coach);
 R.setTinSign(tinSignCanvas(COURT.W, TIN_BOARD_H));   // the game's name and address on the tin
-const audio = new SoundEngine(); audio.setVolume(S.vol); audio.setVoice(VOICE_DATA);
+const audio = new SoundEngine(); audio.setVolume(S.vol); audio.setVoiceVolume(S.voiceVol); audio.setVoice(VOICE_DATA);
 const menu = new MenuPanel(1024, 1500);
 const hint = new TextPanel();
 const board = new Scoreboard();          // the scoreboard's words (the game's record of what it last said)
@@ -5692,6 +5696,8 @@ const placedStatsLine = (k) => () => { const st = plStats(k); return `${PLACED_M
 // and the player again. S.coach 'off': the feeder's mark on the floor, as before.
 const COACH_MENU = [['cartoon', 'Cartoon'], ['comic', 'Comic'], ['chrome', 'Chrome'], ['glass', 'Glass'], ['neon', 'Neon'], ['hologram', 'Hologram'], ['off', 'Off']];
 const coachOn = () => S.coach !== 'off';
+// the voice's level (v1.38): saved, and heard at once (a word from her: the menu pauses the game, not the sound)
+function setVoiceVol(v) { S.voiceVol = Math.max(0, Math.min(1.5, Math.round(v * 10) / 10)); audio.setVoiceVolume(S.voiceVol); save(); buildMenu(); if (S.voiceVol > 0) say(['great drive'], true); }
 const coachAvoid = () => { const a = [[head.p[0], head.p[2]]]; if (G.stance) a.push([G.stance[0], G.stance[1]]); return a; };
 let coachPl = null;                                 // { sol, plan }: the plan for the next feed, made once
 function coachPlanOf(sol) { if (!coachPl || coachPl.sol !== sol) coachPl = { sol, plan: coachPlan(sol, coachAvoid(), coach.lastClip) }; return coachPl.plan; }
@@ -7327,6 +7333,11 @@ function buildMenu() {
       // the voice: reads out each block as it starts, each shot's result and points, and at the end of a block what
       // to work on (back to the T, watching the ball)
       { label: 'Coach  ·  who feeds you', items: COACH_MENU.map(([id, name]) => btn(name, S.coach === id, () => { S.coach = id; coach.setLook(id); save(); }, { small: true, flex: id === 'hologram' ? 1.3 : 1 })) },
+      { label: 'Voice level  ·  her voice against the other sounds', items: [
+        btn('–', false, () => setVoiceVol(S.voiceVol - 0.1), { flex: 0.6 }),
+        btn(S.voiceVol > 0 ? `${Math.round(S.voiceVol * 100)}%` : 'Silent', false, null, { kind: 'value' }),
+        btn('+', false, () => setVoiceVol(S.voiceVol + 0.1), { flex: 0.6 }),
+        btn('Default', S.voiceVol === 0.6, () => setVoiceVol(0.6), { flex: 0.9, small: true })] },
       { label: 'Voice  ·  reads out each block, each result, and what to work on', items: [
         btn('Blocks and every shot', S.voice === 'all', () => { S.voice = 'all'; save(); }, { flex: 1.5, small: true }),
         btn('Blocks only', S.voice === 'blocks', () => { S.voice = 'blocks'; save(); }, { small: true }),
@@ -7980,7 +7991,7 @@ function hudStrip() {
 window.__squash = { label, watchRate, watchPct, anchorMenu, readRoom, roomText, shotNew, hud, hudFlush, hudStrip, scene, TEE, teeReset, head, nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
   toggleMenu, TUNE_SPEC, setTune, resetTune, dropTest, dropDemo, testShot, replayLastHit, endReplay, onSolverMsgs: () => solverLog, RR, applyFrameRate,
   seqRestart, seqTotals, seqLine, seqDefault, seqPlusDefault, seqLenDefault, seqFrontDefault, seqBackDefault, placedScore, PLACED, nickPtsValid, nickPoints, drillNow, sideNow,
-  teeSpot, stanceRef, saveHist, HIST_MAX, altNote, seqBlock, coach, coachBall, coachMouth, coachPlanOf, coachTarget, COACH_MENU, audio, say, voiceKey, voiceBlockKeys, VOICE_DATA, ptsToSay, PTS_OF,
+  teeSpot, stanceRef, saveHist, HIST_MAX, altNote, seqBlock, coach, coachBall, coachMouth, setVoiceVol, coachPlanOf, coachTarget, COACH_MENU, audio, say, voiceKey, voiceBlockKeys, VOICE_DATA, ptsToSay, PTS_OF,
   pickProg, pickSolo, HIST, whenTxt, PROG_NAME, SURF, COURT, RQ };
 
 })();
