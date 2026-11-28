@@ -104,7 +104,7 @@
       <p class="lede" style="margin-top:10px">Targets are worked out for each feed from where you will take the ball. Volley, loose-ball and boast-feed drills show a nick target on the front wall. Boast practice feeds deep into the back corner and shows a target on the side wall. Drive practice feeds down your wall to the back of the service box: the straight-drive target shows where to aim at your usual pace, and each drive is scored on length (a touch long beats short), how close it stays to the side wall all the way back, and touching the side wall late or not at all. Pace is shown but not scored. Each solo drill can be set to crosscourt nick, straight nick, boast, straight drive, straight drop, straight kill, crosscourt drive, crosscourt length, straight lob, crosscourt lob or no target.</p>
       <p class="lede" style="margin-top:10px">The four <strong>main drills</strong> each run a sequence of blocks, the first two off the volley feed. The <strong>Nick shot drill</strong> (320 shots) gives each of the four nicks 10 shots off the normal feed, 10 off a slightly wider crosscourt feed, 10 slightly behind you, 10 further behind, 20 faster and 20 even faster; every shot scores 3 points for a nick or anything within 10 cm of it, 2 within 30 cm and 1 within 70 cm (all set in the menu). The <strong>Straight length drill</strong> (160 shots) uses the same feeds on each side for straight drives, rated as in drive practice: 3 points for a drive of 85 or more, 2 for 70, 1 for 50. The <strong>Front court drill</strong> (120 shots) feeds a straight drop from the back corner on your side, which you take low in the front court and answer six ways, 10 of each on the backhand and then the forehand: counter drop, straight drive, crosscourt drive (hard and low), straight lob, crosscourt lob and crosscourt nick. Each has its target on the front wall; drops, crosscourt drives and lobs are rated on where the ball goes (a drop on how short, low and tight it is, a crosscourt drive on length, width and height on the front wall, a lob on its height over the T line, its length and how close to the side wall it lands), with the same 3, 2 and 1 points. The <strong>Back court drill</strong> (160 shots) feeds straight drives from the T (or beside it, near the side wall), and you play from the back, eight exercises of 10, all on the backhand and then all on the forehand: a straight drive; the same off the back wall (an overhit feed that you let come out); a crosscourt length (to die in the far back corner, touching the side wall behind the service box or not at all); boasts off a deep drive that sits up in the corner; a straight drop; the same off the back wall; a straight kill off a loose, short length (low and hard, to die before the service box); and a crosscourt lob off a hard, low length. The feeds are identical unless you turn on small variation, and the blocks can be edited (up to 30). The menu opens on the main drills, with the <strong>history</strong> under them: every drill played to the end, 10 to a page, with the score, the average speed of your shots, your back-to-the-T and watching-the-ball scores and the breakdown by shot and by kind of feed. The solo drills, the <strong>Custom sequence</strong> (a sequence of your own), the ball and the other options are on the <strong>Solo &amp; options</strong> tab.</p>
       <p class="lede" style="margin-top:10px">Five boxes on the front wall follow your play: the <strong>drill</strong> (block, shot, points), the <strong>speed</strong> of your last shot, the <strong>last shot</strong> (its result, the points it earned and the details), <strong>back to the T</strong>, and a debug box (refresh rate and frame time) when Show: FPS is on. The speed, last-shot and back-to-the-T boxes keep the two shots before the last one, smaller, to compare.</p>
-      <p class="lede" style="margin-top:10px"><strong>The coach.</strong> In the drills a motion-captured coach feeds you: every ball leaves her racquet at the moment of her swing's hit, from where the drill's feeds come from. She looks at you when she talks, at the front wall where her feed goes, at the ball as you hit it and at your shot's target. Racquet &amp; settings sets her look: Cartoon, Comic, Chrome, Glass, Neon or Hologram, or Off.</p>
+      <p class="lede" style="margin-top:10px"><strong>The coach.</strong> In the drills a motion-captured coach feeds you: she holds the next ball in her left hand, throws it up onto her racquet, and it leaves her racquet at the moment of her swing's hit, from where the drill's feeds come from. She looks at you when she talks, at the front wall where her feed goes, at the ball as you hit it and at your shot's target. Racquet &amp; settings sets her look: Cartoon, Comic, Chrome, Glass, Neon or Hologram, or Off.</p>
       <p class="lede" style="margin-top:10px"><strong>The voice.</strong> In a main drill or a custom sequence a voice reads out each block as it starts (the first ball waits for it), each shot's result, with its points only where the result doesn't tell them (&ldquo;Great drive!&rdquo;, &ldquo;Too loose. One point.&rdquo;; a nick shot that missed: &ldquo;So close!&rdquo;, &ldquo;Twenty centimetres short.&rdquo; or &ldquo;Missed.&rdquo;), and at the end of a block what to work on: &ldquo;Make more effort to go back to the T!&rdquo; if you covered less than half the way back on average, &ldquo;Make more effort to watch the ball!&rdquo; if you watched it less than 50&nbsp;%. Racquet &amp; settings sets it to blocks and every shot, blocks only, or off. The phrases are a recording that comes with the page, spoken by an open-source neural voice (Kokoro), since the headset's browser has no speech of its own.</p>
       <p class="lede" style="margin-top:10px"><strong>Back to the T.</strong> After each shot in a drill, a ring on the floor shows where to go back to: red, then yellow, then green as you get there, and the box on the wall says Go back, Closer or Excellent. You are rated on how much of the way you covered before the next ball leaves (all the way 100 %, staying where you hit 0 %), and the drill ends with your back-to-the-T score, kept in the history. By default the ring is the T itself in the main drills (1.2 m from the hitting spot) and a metre towards it in the drills played from further back; Solo &amp; options sets it to up to 0.5 m, always the T, or off. In free play the box counts the shots of your rally.</p>
       <p class="lede" style="margin-top:10px"><strong>Watching the ball.</strong> The drills feed the ball from behind you, so you should be looking back at the feeder as it leaves. Each feed is rated from how far your head is turned: 0 % facing the front wall, 100 % turned to where the ball comes from. Nothing is shown shot by shot; the drill's result gives the percentage, and it is kept in the history.</p>
@@ -3211,12 +3211,22 @@ class Renderer {
       gl.uniform1f(this.pBall.u.uDots, b.dots === undefined ? 1 : b.dots);
       this._draw(this.sphere);
     }
+    // a second ball: the one the coach holds and throws up to feed (v1.36)
+    if (sc.ball2 && sc.ball2.on) {
+      const b = sc.ball2;
+      M4.fromQT(m, b.q, b.p, b.r);
+      this._use(this.pBall, proj, view);
+      gl.uniform3fv(this.pBall.u.uEye, eye); gl.uniformMatrix4fv(this.pBall.u.uModel, false, m);
+      gl.uniform1f(this.pBall.u.uDots, 1);
+      this._draw(this.sphere);
+    }
     // ---- court ----
     this._use(this.pCourt, proj, view);
     gl.uniformMatrix4fv(this.pCourt.u.uModel, false, M4.ident(this.tmp));
     gl.uniform3fv(this.pCourt.u.uEye, eye);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.tinTex); gl.uniform1i(this.pCourt.u.uTin, 0);
-    if (sc.ball.on) gl.uniform4f(this.pCourt.u.uBall, sc.ball.p[0], sc.ball.p[1], sc.ball.p[2], sc.ball.r); else gl.uniform4f(this.pCourt.u.uBall, 0, 0, 0, 0);
+    const sb = sc.ball.on ? sc.ball : sc.ball2 && sc.ball2.on ? sc.ball2 : null;     // the ball's shadow on the court
+    if (sb) gl.uniform4f(this.pCourt.u.uBall, sb.p[0], sb.p[1], sb.p[2], sb.r); else gl.uniform4f(this.pCourt.u.uBall, 0, 0, 0, 0);
     for (let i = 0; i < 6; i++) { gl.uniform1i(this.pCourt.u.uSurf, i); this._draw(this.court[i]); }
     // ---- strings (alpha to coverage) ----
     if (sc.racquet.on) {
@@ -4249,7 +4259,10 @@ const COACH_LEAD = Math.max(...Object.values(COACH_SWINGS).map((s) => s.hit - s.
 const COACH_MIN_LEAD = 0.5;               // a feed asked for at once: the swing is joined this close to its hit
 const FADE_IN = 0.3, FADE_OUT = 0.45;
 const COURT_W = 6.4, COURT_L = 9.75;
-const RH = cbone('RightHand'), HEADB = cbone('Head');
+const RH = cbone('RightHand'), LH = cbone('LeftHand'), HEADB = cbone('Head');
+// the ball in her left hand (T-pose metres): under the palm, the palm's middle 7 cm out from the wrist
+const COACH_BALL_HELD = [BIND.J.LeftHand[0] + 0.070, BIND.J.LeftHand[1] - 0.036, BIND.J.LeftHand[2] + 0.010];
+const skinPt = (skin, b, p) => { const m = skin.subarray(b * 16, b * 16 + 16); return [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]]; };
 // the bones that turn to look, and their shares of the turn
 const LOOK_CHAIN = [[cbone('Spine3'), 0.10], [cbone('Spine4'), 0.15], [cbone('Neck'), 0.30], [cbone('Head'), 0.45]];
 const LOOK_SWING = [[cbone('Neck'), 0.42], [cbone('Head'), 0.58]];      // in a swing the back is left alone: it carries the racquet
@@ -4281,6 +4294,22 @@ function sweetAt(clip, t) {
 // comes up through the ball: 0.75 to 1.25 m high on the right-to-left swing, 0.45 to 1.35 m on the other), so a
 // feed's height picks the moment. For each: tau (s from the captured hit), p: the sweet spot (m), d: the racquet's way
 // across the floor (unit), speed: the head's speed (m/s).
+// When she lets the ball go: her captured swings carry a toss, the left hand rising in front of her to its highest
+// about 0.3 s before the hit. Clip time of that highest point, for each swing.
+const COACH_RELEASE = {};
+for (const k in COACH_SWINGS) {
+  let best = -1, bt = 0;
+  for (let t = COACH_SWINGS[k].hit - 0.6; t <= COACH_SWINGS[k].hit - 0.15; t += 0.01) {
+    COACH_CLIPS[k].sample(t, _p); poseWorld(_p, _r, _w); poseSkin(_w, _s);
+    const y = skinPt(_s, LH, COACH_BALL_HELD)[1]; if (y > best) { best = y; bt = t; }
+  }
+  COACH_RELEASE[k] = +bt.toFixed(2);
+}
+// Holding the next ball: her left arm as it is 0.44 s before the right-to-left hit (hand in front at chest
+// height, elbow bent), on top of the idle; it gives way to the swing's own arm in the 0.35 s before she lets go.
+const LEFT_ARM = ['LeftShoulder', 'LeftArm', 'LeftForeArm', 'LeftHand'].map(cbone);
+const COACH_HOLD_T = COACH_SWINGS.r2l.hit - 0.44;
+const HOLD = (() => { COACH_CLIPS.r2l.sample(COACH_HOLD_T, _p); return LEFT_ARM.map((b) => Array.from(_p.q.subarray(b * 4, b * 4 + 4))); })();
 const COACH_STRIKE = {};
 for (const k in COACH_SWINGS) {
   COACH_STRIKE[k] = [];
@@ -4335,6 +4364,7 @@ class Coach {
     this.x = -2.2; this.z = 8.4; this.yaw = Math.PI * 0.8; this.idleT = 0; this.sw = null; this.lastClip = null;
     this.pI = newPose(); this.pS = newPose(); this.pose = newPose();
     this.world = new Float32Array(CNB * 16); this.skin = new Float32Array(CNB * 16); this.root = M4.create(); this.wq = new Float32Array(CNB * 4);
+    this.holding = false; this.hold = 0;  // she has the next ball in her left hand (set by the game), and how much her arm shows it
     this.dir = null; this.lw = 0;          // where she is looking (unit vector), and how much (0..1)
     this.eye = [0, 0, 0]; this.face = [0, 0, 1];
   }
@@ -4375,6 +4405,18 @@ class Coach {
     }
     w = w * w * (3 - 2 * w);
     if (w > 0) poseBlend(this.pose, this.pI, this.pS, w); else { this.pose.q.set(this.pI.q); this.pose.hips.set(this.pI.hips); }
+    // the left arm holding the ball
+    let hw = this.holding ? 1 : 0;
+    this.hold += Math.max(-dt / 0.3, Math.min(dt / 0.3, hw - this.hold));
+    hw = this.hold;
+    if (this.sw && this.sw.abortAt === undefined && !this.sw.launched) {
+      const rel = Math.min(COACH_RELEASE[this.sw.clip], this.sw.plan.hit - 0.2);
+      hw = Math.min(hw, Math.max(0, Math.min(1, (rel - this.swingTime(now)) / 0.35)));
+    } else if (this.sw && this.sw.launched) hw = Math.min(hw, 0);
+    if (hw > 0.001) { const k = hw * hw * (3 - 2 * hw);
+      LEFT_ARM.forEach((b, i) => { const q = this.pose.q.subarray(b * 4, b * 4 + 4), h = HOLD[i], sg = q[0] * h[0] + q[1] * h[1] + q[2] * h[2] + q[3] * h[3] < 0 ? -1 : 1;
+        for (let j = 0; j < 4; j++) q[j] = q[j] * (1 - k) + h[j] * sg * k;
+        const l = Math.hypot(q[0], q[1], q[2], q[3]); for (let j = 0; j < 4; j++) q[j] /= l; }); }
     Q.axis(_q, 0, 1, 0, this.yaw);
     M4.fromQT(this.root, _q, [this.x, 0, this.z], COACH_SCALE);
     poseWorld(this.pose, this.root, this.world);
@@ -4413,6 +4455,8 @@ class Coach {
     this.face = cqRot(this.wq.subarray(HEADB * 4, HEADB * 4 + 4), FACE);
   }
   // the sweet spot of her racquet now (court metres)
+  // the ball in her left hand now (court metres)
+  handBall() { return skinPt(this.skin, LH, COACH_BALL_HELD); }
   sweet() {
     const p = COACH_RQ.at(0, 0, COACH_RQ.sweet), m = this.skin.subarray(RH * 16, RH * 16 + 16);
     return [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]];
@@ -5001,7 +5045,7 @@ function tinSignCanvas(wallW, tinH) {
 
 
 
-const VERSION = '1.35';
+const VERSION = '1.36';
 // ---------------------------------------------------------------- settings
 // Racquet distance: the hand sits HZ0 further up the racquet than its nominal hand point (7.5 cm from the butt),
 // which brings the whole racquet 20 cm nearer (v1.7 felt like holding it on a 20 cm extension). Adjustable
@@ -5653,7 +5697,31 @@ function coachTick(dt) {
   } else if (!feeding && !coach.sw) {
     const x = -2.3, z = 8.6; coach.goTowards(x, z, Math.atan2(head.p[0] - x, head.p[2] - z), dt);     // free play: watching from the back
   }
+  const sw2 = coach.sw;
+  coach.holding = feeding && (waiting || !!(sw2 && !sw2.launched && sw2.abortAt === undefined));      // the next ball in her left hand
   coach.update(G.time, dt, coachTarget());
+  coachBallTick();
+}
+// Her ball (v1.36): in her left hand while she waits to feed, then thrown up onto her racquet. She lets it go at her
+// swing's toss (COACH_RELEASE, a little before the hit) on the path that meets the sweet spot where the feed starts,
+// at the moment of the hit; there the game's ball takes over. Drawn as the game's ball (scene.ball2).
+const coachBall = { on: false, p: [0, 0, 0], q: [0, 0, 0, 1], r: 0.02, dots: 1 };
+function coachBallTick() {
+  const b = coachBall, sw = coach.sw; b.on = false; b.r = phys.r;
+  if (!coachOn() || drillNow() === 'free' || G.replay) return;
+  let p = null;
+  if (sw && !sw.launched && sw.abortAt === undefined) {
+    const rel = Math.min(COACH_RELEASE[sw.clip], sw.plan.hit - 0.2);
+    if (coach.swingTime(G.time) >= rel || sw.toss) {
+      if (!sw.toss) {            // the throw: from her hand now to the feed's start at the hit, under gravity
+        const p0 = coach.handBall(), T = Math.max(0.05, sw.hitAt - G.time), f = sw.plan.sol.from;
+        sw.toss = { t0: G.time, p0, v0: [(f[0] - p0[0]) / T, (f[1] - p0[1] + 4.905 * T * T) / T, (f[2] - p0[2]) / T] };
+      }
+      const t = G.time - sw.toss.t0, o = sw.toss;
+      p = [o.p0[0] + o.v0[0] * t, o.p0[1] + o.v0[1] * t - 4.905 * t * t, o.p0[2] + o.v0[2] * t];
+    } else p = coach.handBall();
+  } else if (!(sw && sw.toss && sw.abortAt !== undefined) && (G.ball !== 'play' || G.over)) p = coach.handBall();     // waiting to feed: the next ball in her hand
+  if (p) { b.on = true; b.p[0] = p[0]; b.p[1] = p[1]; b.p[2] = p[2]; }
 }
 
 // ---------------------------------------------------------------- the voice (v1.32)
@@ -7449,7 +7517,7 @@ const scene = {
   rings: [], lines: [], dots: [], label: { on: false, tex: labelTex, m: M4.create(), alpha: 1 },
   hint: { on: false, tex: hintTex, m: G.hintM, alpha: 1 },
   hand: { on: false, p: [0, 0, 0] },
-  markers: [], feeder: G.feeder,
+  markers: [], feeder: G.feeder, ball2: coachBall,
   huds: HUD_KEYS.map(k => ({ key: k, on: true, tex: hudTex[k], m: M4.create(), alpha: 1 })),
   menu: { on: false, tex: menuTex, m: G.menuM, alpha: 1, onTop: false },
   laser: { on: false, m: M4.create(), dot: null },
@@ -7876,7 +7944,7 @@ function hudStrip() {
 window.__squash = { label, watchRate, watchPct, anchorMenu, readRoom, roomText, shotNew, hud, hudFlush, hudStrip, scene, TEE, teeReset, head, nickMode, targetMode, board, driveAimForPace, phys, G, S, setDrill, placePlayer, enterVR, R, hands, xr, menu, hint, toggleAdjust, gripCompose, offQ, offP, faceOpen, leanUser, switchHand, buildMenu,
   toggleMenu, TUNE_SPEC, setTune, resetTune, dropTest, dropDemo, testShot, replayLastHit, endReplay, onSolverMsgs: () => solverLog, RR, applyFrameRate,
   seqRestart, seqTotals, seqLine, seqDefault, seqPlusDefault, seqLenDefault, seqFrontDefault, seqBackDefault, placedScore, PLACED, nickPtsValid, nickPoints, drillNow, sideNow,
-  teeSpot, stanceRef, saveHist, HIST_MAX, altNote, seqBlock, coach, coachPlanOf, coachTarget, COACH_MENU, audio, say, voiceKey, voiceBlockKeys, VOICE_DATA, ptsToSay, PTS_OF,
+  teeSpot, stanceRef, saveHist, HIST_MAX, altNote, seqBlock, coach, coachBall, coachPlanOf, coachTarget, COACH_MENU, audio, say, voiceKey, voiceBlockKeys, VOICE_DATA, ptsToSay, PTS_OF,
   pickProg, pickSolo, HIST, whenTxt, PROG_NAME, SURF, COURT, RQ };
 
 })();
